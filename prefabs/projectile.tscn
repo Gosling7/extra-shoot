@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://b48d0fuqqto6e"]
+
+[ext_resource type="Script" uid="uid://b682jt5pbpk4s" path="res://scripts/Projectile.cs" id="1_s5n0i"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_akgne"]
+size = Vector3(1, 0.47436523, 0.4765625)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_a85iw"]
+
+[node name="Area3D" type="Area3D" unique_id=341675052]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_s5n0i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1311803731]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+shape = SubResource("BoxShape3D_akgne")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2017411202]
+transform = Transform3D(7.933941e-16, -1.8150741e-08, -0.41524056, -0.41524056, -1.8150741e-08, 0, -1.8150741e-08, 0.41524056, -1.8150741e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_a85iw")

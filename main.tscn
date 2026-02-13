@@ -1,3 +1,27 @@
 [gd_scene format=3 uid="uid://57r40gsywoty"]
 
-[node name="Node3D" type="Node3D" unique_id=1657562736]
+[ext_resource type="PackedScene" uid="uid://d0esfmj8s3avt" path="res://prefabs/player.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://76lgm7jj4ow" path="res://prefabs/ground.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://d23rseqydf2wa" path="res://prefabs/enemy.tscn" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://dwmhei1p8m3w4" path="res://scripts/Camera.cs" id="5_lquwl"]
+
+[node name="Main" type="Node3D" unique_id=1657562736]
+
+[node name="Player" parent="." unique_id=1164382560 instance=ExtResource("2_0xm2m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.0520935, 0.4843619, 2.3486252)
+
+[node name="Ground" parent="." unique_id=840795718 instance=ExtResource("2_h2yge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2838609, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1952978806]
+transform = Transform3D(0.84763163, -0.26022416, 0.4623895, 0, 0.8714708, 0.49044746, -0.53058517, -0.41571876, 0.7386862, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Enemy" parent="." unique_id=1937972577 instance=ExtResource("3_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35590076, 0.3183093, 4.066227)
+
+[node name="CameraPivot" type="Node3D" parent="." unique_id=1299625704]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=391782342]
+transform = Transform3D(1, 0, 0, 0, 0.4868995, 0.873458, 0, -0.873458, 0.4868995, 0, 9.332665, 3.3230739)
+script = ExtResource("5_lquwl")

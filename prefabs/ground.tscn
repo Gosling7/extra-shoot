@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://76lgm7jj4ow"]
+
+[ext_resource type="Material" uid="uid://c2hbeby1ag3rm" path="res://materials/m_ground.tres" id="1_nklwo"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
+size = Vector3(92.09155, 1, 89.27246)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7dm0k"]
+
+[node name="Ground" type="StaticBody3D" unique_id=840795718]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1274083575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8006499, 0)
+shape = SubResource("BoxShape3D_0xm2m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=414550855]
+transform = Transform3D(45.55094, 0, 0, 0, 1, 0, 0, 0, 45.55094, 0, 1.2838922, 0)
+mesh = SubResource("PlaneMesh_7dm0k")
+surface_material_override/0 = ExtResource("1_nklwo")

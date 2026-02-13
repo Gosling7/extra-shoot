@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://d0esfmj8s3avt"]
+
+[ext_resource type="Script" uid="uid://bxm74j8mqcill" path="res://scripts/Player.cs" id="1_72ieh"]
+[ext_resource type="PackedScene" uid="uid://rx057rmo87s1" path="res://prefabs/UI/inventory_ui.tscn" id="2_4dohe"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_sh265"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_72ieh"]
+size = Vector3(0.185, 0.275, 0.91)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fp3wc"]
+
+[node name="Player" type="CharacterBody3D" unique_id=1164382560]
+script = ExtResource("1_72ieh")
+
+[node name="Pivot" type="Node3D" parent="." unique_id=1962913918]
+
+[node name="Character" type="MeshInstance3D" parent="Pivot" unique_id=1029226086]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9735376, 0)
+mesh = SubResource("CapsuleMesh_sh265")
+
+[node name="Weapon" type="MeshInstance3D" parent="Pivot" unique_id=2059873708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5060504, 1.1832869, -0.52051055)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1015283703]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.94044685, 0)
+shape = SubResource("CapsuleShape3D_fp3wc")
+
+[node name="Muzzle" type="Marker3D" parent="." unique_id=1640101743]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2092948, -0.80282795)
+
+[node name="InventoryUI" parent="." unique_id=1847148390 instance=ExtResource("2_4dohe")]
