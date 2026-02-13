@@ -63,7 +63,7 @@ public class InventoryGrid
                 var isEnoughSpaceVertically = gridHeight < itemStartPositionY + item.Height;
                 if (isEnoughSpaceVertically)
                 {
-                    GD.Print("Too long");
+                    //GD.Print("Too long");
                     return false;
                 }
                 if (_grid[itemStartPositionX + x, itemStartPositionY + y] is not null)

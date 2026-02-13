@@ -27,7 +27,7 @@ public partial class InventoryUI : Control
 		_itemsLayer = GetNode<Control>("ItemsLayer");
 		InventoryManager.Instance.InventoryChanged += Refresh;
 		QueueRedraw();
-		GD.Print("InventoryUI RectSize: ", GetGlobalRect());
+		//GD.Print("InventoryUI RectSize: ", GetGlobalRect());
 	}
 
 	public override void _Draw()
@@ -51,7 +51,7 @@ public partial class InventoryUI : Control
 
 	public override bool _CanDropData(Vector2 atPosition, Variant data)
 	{
-		GD.Print("CanDropData called on InventoryUI");
+		//GD.Print("CanDropData called on InventoryUI");
 		if (data.As<InventoryItem>() is null)
 		{
 			return false;
@@ -61,22 +61,22 @@ public partial class InventoryUI : Control
 		int gridY = (int)(atPosition.Y / CellSize);
 		if (gridX < 0 || gridY < 0)
 		{
-			GD.Print("CanDropData called on InventoryUI outside grid");
+			//GD.Print("CanDropData called on InventoryUI outside grid");
 			return false;
 		}
 		if (gridX >= InventoryManager.Instance.Grid.Width || gridY >= InventoryManager.Instance.Grid.Height)
 		{
-			GD.Print("CanDropData called on InventoryUI outside grid");
+			//GD.Print("CanDropData called on InventoryUI outside grid");
 			return false;
 		}
 
-		GD.Print("CanDropData called on InventoryUI returned true");
+		//GD.Print("CanDropData called on InventoryUI returned true");
 		return true;
 	}
 
 	public override void _DropData(Vector2 atPosition, Variant data)
 	{
-		GD.Print("DropData called on InventoryUI at ", atPosition);
+		//GD.Print("DropData called on InventoryUI at ", atPosition);
 
 		var item = data.As<InventoryItem>();
 
@@ -85,7 +85,7 @@ public partial class InventoryUI : Control
 
 		if (!InventoryManager.Instance.TryPlaceItem(item, gridX, gridY))
 		{
-			GD.Print("There wasn't enough space, moving item to 0,0");
+			//GD.Print("There wasn't enough space, moving item to 0,0");
 			InventoryManager.Instance.ReturnItemToSlotBeforeDrag(DraggedItem);
 		}
 	}
@@ -96,7 +96,7 @@ public partial class InventoryUI : Control
 		{
 			if (!IsDragSuccessful())
 			{
-				GD.Print("Drag failed — returning item");
+				//GD.Print("Drag failed — returning item");
 				InventoryManager.Instance.ReturnItemToSlotBeforeDrag(DraggedItem);
 			}
 		}

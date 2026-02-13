@@ -47,7 +47,7 @@ public partial class InventoryItemUI : Control
 		SetDragPreview(preview);
 		_inventoryUI.DraggedItem = Item;
 		InventoryManager.Instance.RemoveItem(Item);
-		GD.Print(Item);
+		//GD.Print(Item);
 		return (Variant)Item;
 	}
 }
