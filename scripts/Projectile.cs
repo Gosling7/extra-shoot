@@ -1,14 +1,24 @@
+using ExtraShoot.scripts.Interfaces;
 using Godot;
 using System;
 
+namespace ExtraShoot.scripts;
+
 public partial class Projectile : Area3D
 {
-    [Export]
+	[Export]
 	public float Speed = 30f;
+	
 	private Vector3 _direction;
+	private int _damage = 5;
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+	public void Initialize(int damage)
+	{
+		_damage = damage;
+	}
+
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready()
 	{
 		BodyEntered += OnBodyEnter;
 		_direction = -GlobalTransform.Basis.Z.Normalized();
@@ -22,9 +32,11 @@ public partial class Projectile : Area3D
 
 	private void OnBodyEnter(Node3D otherBody)
 	{
-		if (otherBody.IsInGroup("Enemies"))
+		if (otherBody is IDamageable damageable)
 		{
-			GD.Print("EnemyHit");
+			damageable.TakeDamage(_damage);
 		}
+
+		QueueFree();
 	}
 }

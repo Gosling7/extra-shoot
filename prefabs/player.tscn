@@ -31,3 +31,4 @@ shape = SubResource("CapsuleShape3D_fp3wc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2092948, -0.80282795)
 
 [node name="InventoryUI" parent="." unique_id=1847148390 instance=ExtResource("2_4dohe")]
+visible = false

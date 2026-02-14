@@ -18,10 +18,10 @@ transform = Transform3D(0.84763163, -0.26022416, 0.4623895, 0, 0.8714708, 0.4904
 shadow_enabled = true
 
 [node name="Enemy" parent="." unique_id=1937972577 instance=ExtResource("3_1bvp3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35590076, 0.3183093, 4.066227)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35590076, 0.3183093, 3.563939)
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=1299625704]
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=391782342]
-transform = Transform3D(1, 0, 0, 0, 0.4868995, 0.873458, 0, -0.873458, 0.4868995, 0, 9.332665, 3.3230739)
+transform = Transform3D(1, 0, 0, 0, 0.4868995, 0.873458, 0, -0.873458, 0.4868995, 0, 10.948649, 3.3230739)
 script = ExtResource("5_lquwl")

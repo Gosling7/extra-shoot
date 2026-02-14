@@ -1,3 +1,4 @@
+using ExtraShoot.scripts;
 using ExtraShoot.scripts.Inventory;
 using Godot;
 
@@ -14,6 +15,10 @@ public partial class Player : CharacterBody3D
     [Export]
     public float RotationSpeed { get; set; } = 10f;
 
+    // move to weapon class later on
+    [Export]
+    public int Damage { get; set; } = 10;
+
 
     private Vector3 _targetVelocity = Vector3.Zero;
     private Vector3 _direction;
@@ -24,6 +29,7 @@ public partial class Player : CharacterBody3D
     private InputEventMouseMotion _eventMouseMotion;
     private MeshInstance3D _weaponMesh;
     private bool _isWeaponHolstered = false;
+    private Control _inventoryUI;
 
 
     public override void _Ready()
@@ -32,6 +38,7 @@ public partial class Player : CharacterBody3D
         _muzzle = GetNode<Marker3D>("Muzzle");
         _camera = GetViewport().GetCamera3D();
         _weaponMesh = GetNode<MeshInstance3D>("Pivot/Weapon");
+        _inventoryUI = GetNode<Control>("InventoryUI");
 
         var sword = new InventoryItem("Sword", 1, 2);
         var sword2 = new InventoryItem("Sword", 1, 2);
@@ -80,16 +87,12 @@ public partial class Player : CharacterBody3D
                 _isWeaponHolstered = true;
             }
         }
-    }
 
-    public override void _Input(InputEvent @event)
-    {
-        // if (@event is InputEventMouseMotion _eventMouseMotion)
-        // {
-        //     GD.Print($"Mouse position in Viewport: {_eventMouseMotion.Position}");
-        // }
+        if (Input.IsActionJustPressed("toggle_inventory"))
+        {
+            _inventoryUI.Visible = !_inventoryUI.Visible;
+        }
     }
-
 
     public override void _PhysicsProcess(double delta)
     {
@@ -116,6 +119,7 @@ public partial class Player : CharacterBody3D
         }
 
         var projectile = _projectileScene.Instantiate<Projectile>();
+        projectile.Initialize(Damage);
         projectile.GlobalTransform = _muzzle.GlobalTransform;
 
         GetTree().CurrentScene.AddChild(projectile);
