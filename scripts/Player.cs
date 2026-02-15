@@ -21,19 +21,24 @@ public partial class Player : CharacterBody3D
     private Marker3D _muzzle;
     private Camera3D _camera;
     private Weapon _weapon;
-    private bool _isWeaponHolstered = false;
+    private bool _isWeaponHolstered = true;
     private Control _inventoryUI;
     private Helper _helper;
     private bool _canShoot = true;
-
+    private TextureRect _crosshair;
+    private Viewport _viewport;
 
     public override void _Ready()
     {
+        _viewport = GetViewport();
         _muzzle = GetNode<Marker3D>("Pivot/Weapon/Muzzle");
-        _camera = GetViewport().GetCamera3D();
+        _camera = _viewport.GetCamera3D();
         _weapon = GetNode<Weapon>("Pivot/Weapon");
         _inventoryUI = GetNode<Control>("InventoryUI");
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
+        _crosshair = GetTree().CurrentScene.GetNode<TextureRect>("UI/Crosshair");
+
+        _weapon.Visible = false;
 
         var sword = new InventoryItem("Sword", 1, 2);
         var sword2 = new InventoryItem("Sword", 1, 2);
@@ -44,6 +49,8 @@ public partial class Player : CharacterBody3D
     public override void _Process(double delta)
     {
         RotateTowardsCursor();
+
+        UpdateCrosshair();
 
         _direction = Vector3.Zero;
 
@@ -79,10 +86,14 @@ public partial class Player : CharacterBody3D
             if (_weapon.Visible)
             {
                 _isWeaponHolstered = false;
+                Input.MouseMode = Input.MouseModeEnum.Hidden;
+                _crosshair.Visible = true;
             }
             else
             {
                 _isWeaponHolstered = true;
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+                _crosshair.Visible = false;
             }
         }
 
@@ -130,5 +141,13 @@ public partial class Player : CharacterBody3D
     private void ResetCanShoot()
     {
         _canShoot = true;
+    }
+    
+    private void UpdateCrosshair()
+    {
+        var mousePosition = _viewport.GetMousePosition();
+        _crosshair.Position = new Vector2(
+            mousePosition.X - _crosshair.Size.X / 2,
+            mousePosition.Y - _crosshair.Size.Y / 2);
     }
 }

@@ -21,23 +21,23 @@ emission = Color(1, 1, 1, 1)
 script = ExtResource("1_dkuqq")
 
 [node name="Body" type="MeshInstance3D" parent="." unique_id=2076747142]
-transform = Transform3D(0.34842288, 0, 0, 0, 0.47261178, 0, 0, 0, 0.17966162, 0, 0.20729724, -0.13972649)
+transform = Transform3D(0.34842288, 0, 0, 0, 0.69553065, 0, 0, 0, 0.32290658, 0, 0.26245373, -0.2199541)
 mesh = SubResource("BoxMesh_72ieh")
 
 [node name="Mag" type="MeshInstance3D" parent="." unique_id=482775076]
-transform = Transform3D(0.6609891, 0, 0, 0, 0.29359025, 0, 0, 0, 0.09120214, 0, 0.21579674, -0.13972649)
+transform = Transform3D(0.6609891, 0, 0, 0, 0.43206924, 0, 0, 0, 0.16391799, 0, 0.27095324, -0.2331021)
 mesh = SubResource("BoxMesh_72ieh")
 
 [node name="Barrel" type="MeshInstance3D" parent="." unique_id=414013537]
-transform = Transform3D(0.34842288, 0, 0, 0, 0.2837985, 0, 0, 0, 0.331744, 0, 0.22181478, -0.36144963)
+transform = Transform3D(0.34842288, 0, 0, 0, 0.41765895, 0, 0, 0, 0.5962449, 0, 0.27697128, -0.5519903)
 mesh = SubResource("BoxMesh_72ieh")
 
 [node name="Handle" type="MeshInstance3D" parent="." unique_id=589129676]
-transform = Transform3D(0.3484229, 0, 0, 0, 0.09782772, -0.23475194, 0, 0.3968177, 0.057873543, 0, 0.08401111, -0.028368384)
+transform = Transform3D(0.3484229, 0, 0, 0, 0.14397056, -0.35782987, 0, 0.58398646, 0.08821603, 0, 0.062336713, -0.043255284)
 mesh = SubResource("BoxMesh_72ieh")
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=1415312969]
-transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.22208276, -0.515365)
+transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.275427, -0.82664067)
 
 [node name="Tracer" type="MeshInstance3D" parent="Muzzle" unique_id=1993530619]
 transform = Transform3D(-2.2187538, 3.417771e-10, -0.013417749, 0.01734886, 4.3710045e-08, -1.7160026, 3.61838e-17, -0.99999964, -7.501115e-08, 0, 0, -0.015042961)
