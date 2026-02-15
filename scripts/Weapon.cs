@@ -32,12 +32,12 @@ public partial class Weapon : Node3D
     {
         //GD.Print("SHOOT()!!!!!!!!!!!!!!!!!");
         var hitResult = _helper.GetHitResultUnderMouse(_collisionMask, [_player.GetRid()]);
-        if (!hitResult.TryGetValue("position", out var pos))
+        if (!hitResult.TryGetValue("position", out var targetPosition))
         {
             return;
-        }
+        }        
 
-        SpawnTracer((Vector3)pos);
+        SpawnTracer((Vector3)targetPosition);
 
         if (!hitResult.TryGetValue("collider", out var hitNode) 
             || (Node3D)hitNode is not IDamageable damageable)
@@ -54,10 +54,11 @@ public partial class Weapon : Node3D
         damageable?.TakeDamage(Damage);
     }
 
-    private void SpawnTracer(Vector3 end)
+    private void SpawnTracer(Vector3 targetPosition)
     {
+        _muzzle.LookAt(targetPosition);
         var start = _muzzle.GlobalTransform.Origin;
-        var distance = start.DistanceTo(end);
+        var distance = start.DistanceTo(targetPosition);
 
         if (_tracer.Mesh is CylinderMesh cylinder)
         {

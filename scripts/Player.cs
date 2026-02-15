@@ -3,6 +3,8 @@ using ExtraShoot.scripts.Inventory;
 using ExtraShoot.scripts.Utilities;
 using Godot;
 
+namespace ExtraShoot.scripts;
+
 public partial class Player : CharacterBody3D
 {
     // How fast the player moves in meters per second.

@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace ExtraShoot.scripts;
+
 public partial class Camera : Camera3D
 {
     [Export] public Vector3 Offset = new(0, 10, 10);
