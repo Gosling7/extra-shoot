@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://cniqowobxfe01"]
+
+[ext_resource type="Script" uid="uid://v18ejdrjrm50" path="res://scripts/Weapon.cs" id="1_dkuqq"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_72ieh"]
+size = Vector3(0.185, 0.275, 0.91)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_dkuqq"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fe3b8"]
+transparency = 1
+albedo_color = Color(0.7893558, 0.8069171, 0.83041495, 0.2627451)
+metallic_specular = 0.0
+roughness = 0.0
+emission = Color(1, 1, 1, 1)
+
+[node name="Weapon" type="Node3D" unique_id=1295996286]
+script = ExtResource("1_dkuqq")
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=2076747142]
+transform = Transform3D(0.34842288, 0, 0, 0, 0.47261178, 0, 0, 0, 0.17966162, 0, 0.20729724, -0.13972649)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Mag" type="MeshInstance3D" parent="." unique_id=482775076]
+transform = Transform3D(0.6609891, 0, 0, 0, 0.29359025, 0, 0, 0, 0.09120214, 0, 0.21579674, -0.13972649)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Barrel" type="MeshInstance3D" parent="." unique_id=414013537]
+transform = Transform3D(0.34842288, 0, 0, 0, 0.2837985, 0, 0, 0, 0.331744, 0, 0.22181478, -0.36144963)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Handle" type="MeshInstance3D" parent="." unique_id=589129676]
+transform = Transform3D(0.3484229, 0, 0, 0, 0.09782772, -0.23475194, 0, 0.3968177, 0.057873543, 0, 0.08401111, -0.028368384)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Muzzle" type="Marker3D" parent="." unique_id=1415312969]
+transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.22208276, -0.515365)
+
+[node name="Tracer" type="MeshInstance3D" parent="Muzzle" unique_id=1993530619]
+transform = Transform3D(-2.2187538, 3.417771e-10, -0.013417749, 0.01734886, 4.3710045e-08, -1.7160026, 3.61838e-17, -0.99999964, -7.501115e-08, 0, 0, -0.015042961)
+visible = false
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_dkuqq")
+surface_material_override/0 = SubResource("StandardMaterial3D_fe3b8")

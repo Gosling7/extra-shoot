@@ -1,5 +1,6 @@
 using ExtraShoot.scripts;
 using ExtraShoot.scripts.Inventory;
+using ExtraShoot.scripts.Utilities;
 using Godot;
 
 public partial class Player : CharacterBody3D
@@ -12,33 +13,25 @@ public partial class Player : CharacterBody3D
     // The downward acceleration when in the air, in meters per second squared.
     [Export]
     public int FallAcceleration { get; set; } = 75;
-    [Export]
-    public float RotationSpeed { get; set; } = 10f;
-
-    // move to weapon class later on
-    [Export]
-    public int Damage { get; set; } = 10;
-
 
     private Vector3 _targetVelocity = Vector3.Zero;
     private Vector3 _direction;
-    private PackedScene _projectileScene;
     private Marker3D _muzzle;
-    private float _timeSinceLastShot = 0f;
     private Camera3D _camera;
-    private InputEventMouseMotion _eventMouseMotion;
-    private MeshInstance3D _weaponMesh;
+    private Weapon _weapon;
     private bool _isWeaponHolstered = false;
     private Control _inventoryUI;
+    private Helper _helper;
+    private bool _canShoot = true;
 
 
     public override void _Ready()
     {
-        _projectileScene = GD.Load<PackedScene>("res://prefabs/projectile.tscn");
-        _muzzle = GetNode<Marker3D>("Muzzle");
+        _muzzle = GetNode<Marker3D>("Pivot/Weapon/Muzzle");
         _camera = GetViewport().GetCamera3D();
-        _weaponMesh = GetNode<MeshInstance3D>("Pivot/Weapon");
+        _weapon = GetNode<Weapon>("Pivot/Weapon");
         _inventoryUI = GetNode<Control>("InventoryUI");
+        _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
 
         var sword = new InventoryItem("Sword", 1, 2);
         var sword2 = new InventoryItem("Sword", 1, 2);
@@ -69,16 +62,19 @@ public partial class Player : CharacterBody3D
             _direction.Z -= 1.0f;
         }
 
-        _timeSinceLastShot += (float)delta;
-        if (Input.IsActionPressed("shoot") && !_isWeaponHolstered)
+        if (Input.IsActionJustPressed("shoot") && !_isWeaponHolstered && _canShoot)
         {
-            Shoot();
+            _weapon.Shoot();
+
+            _canShoot = false;
+
+            GetTree().CreateTimer(_weapon.FireRate).Connect("timeout", new Callable(this, nameof(ResetCanShoot)));
         }
 
         if (Input.IsActionJustPressed("holster"))
         {
-            _weaponMesh.Visible = !_weaponMesh.Visible;
-            if (_weaponMesh.Visible)
+            _weapon.Visible = !_weapon.Visible;
+            if (_weapon.Visible)
             {
                 _isWeaponHolstered = false;
             }
@@ -111,40 +107,26 @@ public partial class Player : CharacterBody3D
         MoveAndSlide();
     }
 
-    private void Shoot()
+    private void RotateTowardsCursor()
     {
-        if (_timeSinceLastShot < FireRate)
+        var hitResult = _helper.GetHitResultUnderMouse(CollisionMask, [GetRid()]);
+        if (hitResult is null || !hitResult.TryGetValue("position", out var pos))
         {
             return;
         }
 
-        var projectile = _projectileScene.Instantiate<Projectile>();
-        projectile.Initialize(Damage);
-        projectile.GlobalTransform = _muzzle.GlobalTransform;
-
-        GetTree().CurrentScene.AddChild(projectile);
-
-        _timeSinceLastShot = 0f;
-    }
-
-    private void RotateTowardsCursor()
-    {
-        var spaceState = GetWorld3D().DirectSpaceState;
-        var mousePosition = GetViewport().GetMousePosition();
-
-        var origin = _camera.ProjectRayOrigin(mousePosition);
-        var end = origin + _camera.ProjectRayNormal(mousePosition) * 100;
-        var query = PhysicsRayQueryParameters3D.Create(origin, end, CollisionMask, [GetRid()]);
-        query.CollideWithAreas = true;
-        var result = spaceState.IntersectRay(query);
-
-        var targetPos = (Vector3)result["position"];
-        var lookAtTarget = new Vector3(targetPos.X, Position.Y, targetPos.Z);
+        var position = (Vector3)pos;
+        var lookAtTarget = new Vector3(position.X, Position.Y, position.Z);
         LookAt(lookAtTarget);
 
         // GD.Print($"Mouse position in Viewport: {mousePosition}");
         // GD.Print($"Origin: {origin}");
         // GD.Print($"End: {end}");
         // GD.Print($"Result: {result}");
+    }
+
+    private void ResetCanShoot()
+    {
+        _canShoot = true;
     }
 }

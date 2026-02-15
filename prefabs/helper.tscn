@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://d3t18mppx377q"]
+
+[ext_resource type="Script" uid="uid://bvusjwaj7r7m8" path="res://scripts/Utilities/Helper.cs" id="1_gkrdl"]
+
+[node name="Helper" type="Node3D" unique_id=613433542]
+script = ExtResource("1_gkrdl")

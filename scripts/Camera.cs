@@ -3,7 +3,7 @@ using System;
 
 public partial class Camera : Camera3D
 {
-    [Export] public Vector3 Offset = new Vector3(0, 10, 10);
+    [Export] public Vector3 Offset = new(0, 10, 10);
     [Export] public float FollowSpeed = 5f;
 
     private Node3D _playerNode;
@@ -21,7 +21,5 @@ public partial class Camera : Camera3D
 
         Vector3 targetPos = _playerNode.GlobalPosition;
         _cameraPivotNode.Position = targetPos;
-        
-        //LookAt(_playerNode.GlobalPosition, Vector3.Up); // Optional: camera looks at player
     }
 }
