@@ -27,6 +27,7 @@ public partial class Player : CharacterBody3D
     private bool _canShoot = true;
     private TextureRect _crosshair;
     private Viewport _viewport;
+    private Node3D _holsteredWeaponModel;
 
     public override void _Ready()
     {
@@ -34,11 +35,13 @@ public partial class Player : CharacterBody3D
         _muzzle = GetNode<Marker3D>("Pivot/Weapon/Muzzle");
         _camera = _viewport.GetCamera3D();
         _weapon = GetNode<Weapon>("Pivot/Weapon");
+        _holsteredWeaponModel = GetNode<Weapon>("Pivot/HolsteredWeapon");
         _inventoryUI = GetNode<Control>("InventoryUI");
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
         _crosshair = GetTree().CurrentScene.GetNode<TextureRect>("UI/Crosshair");
 
         _weapon.Visible = false;
+        _holsteredWeaponModel.Visible = true;
 
         var sword = new InventoryItem("Sword", 1, 2);
         var sword2 = new InventoryItem("Sword", 1, 2);
@@ -86,12 +89,14 @@ public partial class Player : CharacterBody3D
             if (_weapon.Visible)
             {
                 _isWeaponHolstered = false;
+                _holsteredWeaponModel.Visible = false;
                 Input.MouseMode = Input.MouseModeEnum.Hidden;
                 _crosshair.Visible = true;
             }
             else
             {
                 _isWeaponHolstered = true;
+                _holsteredWeaponModel.Visible = true;
                 Input.MouseMode = Input.MouseModeEnum.Visible;
                 _crosshair.Visible = false;
             }

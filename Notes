@@ -1,0 +1,45 @@
+States
+{
+    Idle -> everyone
+    Moving,
+    AttackingMelee,
+    AttackingRanged,
+    Patrolling,
+    Dodging,
+    Blocking,
+    Dashing,
+    Dead -> everyone
+}
+
+Enemy Shooter
+{
+    canMove = true,
+    canAttackMelee = false,
+    canAttackRanged = true,
+    canPatrol = true,
+    canDodge = true,
+    canBlock = false,
+    canDash = false,
+}
+
+Enemy Tank
+{
+    canMove = true,
+    canAttackMelee = true,
+    canAttackRanged = false,
+    canPatrol = true,
+    canDodge = false,
+    canBlock = true,
+    canDash = false,
+}
+
+Enemy Dog
+{
+    canMove = true,
+    canAttackMelee = true,
+    canAttackRanged = false,
+    canPatrol = true,
+    canDodge = true,
+    canBlock = false,
+    canDash = true,
+}

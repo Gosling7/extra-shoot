@@ -13,6 +13,7 @@ height = 1.7836914
 [node name="Player" type="CharacterBody3D" unique_id=1164382560]
 collision_mask = 3
 script = ExtResource("1_72ieh")
+Speed = 10
 
 [node name="Pivot" type="Node3D" parent="." unique_id=1962913918]
 
@@ -21,7 +22,11 @@ transform = Transform3D(0.882, 0, 0, 0, 0.903, 0, 0, 0, 0.903, 0, 0.9058717, 0)
 mesh = SubResource("CapsuleMesh_sh265")
 
 [node name="Weapon" parent="Pivot" unique_id=1295996286 instance=ExtResource("2_r66lb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52438176, 0.92329776, -0.118364036)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.50898516, 0.92329776, -0.31882733)
+visible = false
+
+[node name="HolsteredWeapon" parent="Pivot" unique_id=515774167 instance=ExtResource("2_r66lb")]
+transform = Transform3D(1, 0, 0, 0, 0.5236291, 0.8519463, 0, -0.8519463, 0.5236291, 0.52438176, 0.7630376, 0.3081579)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1015283703]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9099293, 0)

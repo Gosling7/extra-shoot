@@ -1,7 +1,11 @@
 [gd_scene format=3 uid="uid://d23rseqydf2wa"]
 
 [ext_resource type="Script" uid="uid://bjqg62jk286um" path="res://scripts/Enemy.cs" id="1_6n8dw"]
+[ext_resource type="PackedScene" uid="uid://6rji4jqktugi" path="res://prefabs/projectile.tscn" id="2_cypye"]
 [ext_resource type="PackedScene" uid="uid://b86xyb0dkgwjo" path="res://prefabs/UI/health_bar_ui.tscn" id="2_yfjof"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yfjof"]
+radius = 13.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ks3ws"]
 
@@ -9,11 +13,23 @@
 albedo_color = Color(0.8560899, 0.35687447, 0.26757878, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6n8dw"]
+radius = 0.640625
+height = 1.9228516
 
 [node name="Enemy" type="CharacterBody3D" unique_id=1937972577]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_6n8dw")
+MaxHealth = 50
+ProjectileScene = ExtResource("2_cypye")
+
+[node name="EnemyDetectionArea" type="Area3D" parent="." unique_id=442186486]
+collision_layer = 0
+input_ray_pickable = false
+
+[node name="DetectionCollisionShape" type="CollisionShape3D" parent="EnemyDetectionArea" unique_id=1681896857]
+shape = SubResource("SphereShape3D_yfjof")
+debug_color = Color(0, 0.5950001, 0.7, 1)
 
 [node name="Pivot" type="Node3D" parent="." unique_id=909536654]
 
@@ -43,9 +59,10 @@ mesh = SubResource("CapsuleMesh_ks3ws")
 surface_material_override/0 = SubResource("StandardMaterial3D_ks3ws")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=13438480]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9983711, 0)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9597969, 0)
 shape = SubResource("CapsuleShape3D_6n8dw")
 
 [node name="HealthBarRoot" parent="." unique_id=1766194223 instance=ExtResource("2_yfjof")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.451425, 0)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=794284444]
