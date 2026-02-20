@@ -3,9 +3,9 @@ using ExtraShoot.scripts.Utilities;
 using Godot;
 using System;
 
-namespace ExtraShoot.scripts;
+namespace ExtraShoot.scripts.Enemy;
 
-public partial class Enemy : CharacterBody3D, IDamageable
+public partial class EnemyShooter : CharacterBody3D, IDamageable
 {
     [Export]
     public int MaxHealth { get; set; } = 30;

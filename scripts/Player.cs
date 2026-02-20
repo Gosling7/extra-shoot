@@ -1,4 +1,4 @@
-using ExtraShoot.scripts;
+using System;
 using ExtraShoot.scripts.Inventory;
 using ExtraShoot.scripts.Utilities;
 using Godot;
@@ -21,13 +21,31 @@ public partial class Player : CharacterBody3D
     private Marker3D _muzzle;
     private Camera3D _camera;
     private Weapon _weapon;
+    private WeaponHeavy _weaponHeavy;
     private bool _isWeaponHolstered = true;
     private Control _inventoryUI;
     private Helper _helper;
     private bool _canShoot = true;
-    private TextureRect _crosshair;
     private Viewport _viewport;
-    private Node3D _holsteredWeaponModel;
+    private Node3D _holsteredWeaponVisual;
+    private Node3D _holsteredWeaponHeavyVisual;
+
+    private Control _newCrosshair;
+    private TextureRect _crosshairUp;
+    private TextureRect _crosshairDown;
+    private TextureRect _crosshairLeft;
+    private TextureRect _crosshairRight;
+
+    private Vector2 _crosshairUpDefaultPosition;
+    private Vector2 _crosshairDownDefaultPosition;
+    private Vector2 _crosshairLeftDefaultPosition;
+    private Vector2 _crosshairRightDefaultPosition;
+
+    private float _minAimSpread = 0f;
+    [Export]
+    public float MaxAimSpread { get; set; } = 0.1f;
+    private float _spreadLerpSpeed = 4f;
+    private float _currentSpread;
 
     public override void _Ready()
     {
@@ -35,13 +53,27 @@ public partial class Player : CharacterBody3D
         _muzzle = GetNode<Marker3D>("Pivot/Weapon/Muzzle");
         _camera = _viewport.GetCamera3D();
         _weapon = GetNode<Weapon>("Pivot/Weapon");
-        _holsteredWeaponModel = GetNode<Weapon>("Pivot/HolsteredWeapon");
+        _weaponHeavy = GetNode<WeaponHeavy>("Pivot/WeaponHeavy");
+        _holsteredWeaponVisual = GetNode<Weapon>("Pivot/HolsteredWeapon");
+        _holsteredWeaponHeavyVisual = GetNode<WeaponHeavy>("Pivot/HolsteredWeaponHeavy");
         _inventoryUI = GetNode<Control>("InventoryUI");
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
-        _crosshair = GetTree().CurrentScene.GetNode<TextureRect>("UI/Crosshair");
+        _newCrosshair = GetTree().CurrentScene.GetNode<Control>("UI/NewCrosshair");
+
+        _crosshairUp = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/up");
+        _crosshairDown = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/down");
+        _crosshairLeft = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/left");
+        _crosshairRight = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/right");
+
+        _crosshairUpDefaultPosition = _crosshairUp.Position;
+        _crosshairDownDefaultPosition = _crosshairDown.Position;
+        _crosshairLeftDefaultPosition = _crosshairLeft.Position;
+        _crosshairRightDefaultPosition = _crosshairRight.Position;
 
         _weapon.Visible = false;
-        _holsteredWeaponModel.Visible = true;
+        _weaponHeavy.Visible = false;
+        _holsteredWeaponVisual.Visible = true;
+        _holsteredWeaponHeavyVisual.Visible = true;
 
         var sword = new InventoryItem("Sword", 1, 2);
         var sword2 = new InventoryItem("Sword", 1, 2);
@@ -53,8 +85,23 @@ public partial class Player : CharacterBody3D
     {
         RotateTowardsCursor();
 
-        UpdateCrosshair();
+        // aim spread
+        var spread = Velocity.Length() > 0.1f ? MaxAimSpread : _minAimSpread;
+        _currentSpread = Mathf.Lerp(_currentSpread, spread, (float)(_spreadLerpSpeed * delta));
+        if (_currentSpread < 0.001f)
+        {
+            _currentSpread = 0f;
+        }
 
+        // GD.Print($"Current spread: {_currentSpread}");
+
+        UpdateCrosshair(_currentSpread);
+
+        HandleInput();
+    }
+
+    private void HandleInput()
+    {
         _direction = Vector3.Zero;
 
         if (Input.IsActionPressed("move_right"))
@@ -76,8 +123,16 @@ public partial class Player : CharacterBody3D
 
         if (Input.IsActionJustPressed("shoot") && !_isWeaponHolstered && _canShoot)
         {
-            _weapon.Shoot();
+            if (_weapon.Visible)
+            {
+                _weapon.Shoot(_currentSpread);
+            }
+            if (_weaponHeavy.Visible)
+            {
+                _weaponHeavy.Shoot(_currentSpread);
+            }
 
+            _currentSpread = MaxAimSpread;
             _canShoot = false;
 
             GetTree().CreateTimer(_weapon.FireRate).Connect("timeout", new Callable(this, nameof(ResetCanShoot)));
@@ -89,16 +144,47 @@ public partial class Player : CharacterBody3D
             if (_weapon.Visible)
             {
                 _isWeaponHolstered = false;
-                _holsteredWeaponModel.Visible = false;
+                _holsteredWeaponVisual.Visible = false;
                 Input.MouseMode = Input.MouseModeEnum.Hidden;
-                _crosshair.Visible = true;
+                _newCrosshair.Visible = true;
+
+                if (_weaponHeavy.Visible)
+                {
+                    _weaponHeavy.Visible = false;
+                    _holsteredWeaponHeavyVisual.Visible = true;
+                }
             }
             else
             {
                 _isWeaponHolstered = true;
-                _holsteredWeaponModel.Visible = true;
+                _holsteredWeaponVisual.Visible = true;
                 Input.MouseMode = Input.MouseModeEnum.Visible;
-                _crosshair.Visible = false;
+                _newCrosshair.Visible = false;
+            }
+        }
+
+        if (Input.IsActionJustPressed("holster_heavy"))
+        {
+            _weaponHeavy.Visible = !_weaponHeavy.Visible;
+            if (_weaponHeavy.Visible)
+            {
+                _isWeaponHolstered = false;
+                _holsteredWeaponHeavyVisual.Visible = false;
+                Input.MouseMode = Input.MouseModeEnum.Hidden;
+                _newCrosshair.Visible = true;
+
+                if (_weapon.Visible)
+                {
+                    _weapon.Visible = false;
+                    _holsteredWeaponVisual.Visible = true;
+                }
+            }
+            else
+            {
+                _isWeaponHolstered = true;
+                _holsteredWeaponHeavyVisual.Visible = true;
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+                _newCrosshair.Visible = false;
             }
         }
 
@@ -107,6 +193,7 @@ public partial class Player : CharacterBody3D
             _inventoryUI.Visible = !_inventoryUI.Visible;
         }
     }
+
 
     public override void _PhysicsProcess(double delta)
     {
@@ -147,12 +234,41 @@ public partial class Player : CharacterBody3D
     {
         _canShoot = true;
     }
-    
-    private void UpdateCrosshair()
+
+    private void UpdateCrosshair(float spread)
     {
         var mousePosition = _viewport.GetMousePosition();
-        _crosshair.Position = new Vector2(
-            mousePosition.X - _crosshair.Size.X / 2,
-            mousePosition.Y - _crosshair.Size.Y / 2);
+        
+        _newCrosshair.Position = new Vector2(
+            mousePosition.X - _newCrosshair.Size.X / 2,
+            mousePosition.Y - _newCrosshair.Size.Y / 2);
+        
+        var spreadMultiplier = 9f;
+        var crosshairSpread = spread * 100 * spreadMultiplier;
+        GD.Print(crosshairSpread);
+
+        if (_currentSpread > 0.001f)
+        {
+            _crosshairUp.Position = new Vector2(
+                _crosshairUpDefaultPosition.X, 
+                _crosshairUpDefaultPosition.Y - crosshairSpread);
+            _crosshairDown.Position = new Vector2(
+                _crosshairDownDefaultPosition.X, 
+                _crosshairDownDefaultPosition.Y + crosshairSpread);
+
+            _crosshairLeft.Position = new Vector2(
+                _crosshairLeftDefaultPosition.X - crosshairSpread, _crosshairLeftDefaultPosition.Y);
+            _crosshairRight.Position = new Vector2(
+                _crosshairRightDefaultPosition.X + crosshairSpread, _crosshairRightDefaultPosition.Y);                
+        }
+
+        if (_currentSpread < 0.001f)
+        {
+            _crosshairUp.Position = _crosshairUpDefaultPosition;
+            _crosshairDown.Position = _crosshairDownDefaultPosition;
+
+            _crosshairLeft.Position = _crosshairLeftDefaultPosition;
+            _crosshairRight.Position = _crosshairRightDefaultPosition;
+        }      
     }
 }

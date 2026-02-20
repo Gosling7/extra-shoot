@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bxm74j8mqcill" path="res://scripts/Player.cs" id="1_72ieh"]
 [ext_resource type="PackedScene" uid="uid://rx057rmo87s1" path="res://prefabs/UI/inventory_ui.tscn" id="2_4dohe"]
 [ext_resource type="PackedScene" uid="uid://cniqowobxfe01" path="res://prefabs/weapon.tscn" id="2_r66lb"]
+[ext_resource type="PackedScene" uid="uid://c3takkbi5ym0" path="res://prefabs/weapon_heavy.tscn" id="3_1txc5"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_sh265"]
 
@@ -27,6 +28,13 @@ visible = false
 
 [node name="HolsteredWeapon" parent="Pivot" unique_id=515774167 instance=ExtResource("2_r66lb")]
 transform = Transform3D(1, 0, 0, 0, 0.5236291, 0.8519463, 0, -0.8519463, 0.5236291, 0.52438176, 0.7630376, 0.3081579)
+
+[node name="HolsteredWeaponHeavy" parent="Pivot" unique_id=1371720210 instance=ExtResource("3_1txc5")]
+transform = Transform3D(-5.7441067e-08, 0.67862135, 0.73448837, 1.7571235e-08, -0.7344883, 0.6786214, 0.9999999, 2.9802322e-08, 3.6901582e-08, 0.24040791, 1.4754088, 0.43459523)
+
+[node name="WeaponHeavy" parent="Pivot" unique_id=1979123076 instance=ExtResource("3_1txc5")]
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0.54358435, 0.95958745, -0.2816917)
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1015283703]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9099293, 0)

@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://c3takkbi5ym0"]
+
+[ext_resource type="Script" uid="uid://cyas1ecio87cj" path="res://scripts/WeaponHeavy.cs" id="1_ph2b8"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_72ieh"]
+size = Vector3(0.185, 0.275, 0.91)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_dkuqq"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fe3b8"]
+transparency = 1
+albedo_color = Color(0.7893558, 0.8069171, 0.83041495, 0.2627451)
+metallic_specular = 0.0
+roughness = 0.0
+emission = Color(1, 1, 1, 1)
+
+[node name="WeaponHeavy" type="Node3D" unique_id=1295996286]
+script = ExtResource("1_ph2b8")
+ReloadTime = 3.0
+Damage = 30
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=2076747142]
+transform = Transform3D(0.34842288, 0, 0, 0, 0.69553065, 0, 0, 0, 0.32290658, 0, 0.26245373, -0.2199541)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Mag" type="MeshInstance3D" parent="." unique_id=482775076]
+transform = Transform3D(0.6609891, 0, 0, 0, 0.43206924, 0, 0, 0, 0.16391799, 0, 0.27095324, -0.2331021)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Barrel" type="MeshInstance3D" parent="." unique_id=414013537]
+transform = Transform3D(0.34842288, 0, 0, 0, 0.41765895, 0, 0, 0, 2.1543741, 0, 0.27697128, -0.5519903)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Handle" type="MeshInstance3D" parent="." unique_id=589129676]
+transform = Transform3D(0.3484229, 0, 0, 0, 0.14397056, -0.35782987, 0, 0.58398646, 0.08821603, 0, 0.062336713, -0.043255284)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Handle2" type="MeshInstance3D" parent="." unique_id=1089155089]
+transform = Transform3D(0.3484229, 0, 0, 0, 0.0021724608, -0.2725458, 0, 0.31915155, 0.001855216, 0, 0.2404041, 0.38438857)
+mesh = SubResource("BoxMesh_72ieh")
+
+[node name="Muzzle" type="Marker3D" parent="." unique_id=1415312969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275427, -1.5345223)
+
+[node name="Tracer" type="MeshInstance3D" parent="Muzzle" unique_id=1993530619]
+transform = Transform3D(-2.5422535, 8.759251e-08, -0.017539484, 0.019881347, 4.3473047e-08, -2.2427964, -2.218175e-07, -0.9999998, -9.9037536e-08, 0, 0, -0.01504302)
+visible = false
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_dkuqq")
+surface_material_override/0 = SubResource("StandardMaterial3D_fe3b8")

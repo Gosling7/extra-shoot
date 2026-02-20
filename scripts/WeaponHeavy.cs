@@ -5,7 +5,7 @@ using System;
 
 namespace ExtraShoot.scripts;
 
-public partial class Weapon : Node3D
+public partial class WeaponHeavy : Node3D
 {
     [Export] public int MagSize = 5;        // Total bullets per mag
     [Export] public float FireRate = 0.5f;  // Seconds between shots
@@ -31,14 +31,13 @@ public partial class Weapon : Node3D
     public void Shoot(float spread)
     {
         //GD.Print("SHOOT()!!!!!!!!!!!!!!!!!");
-        var hitResult = _helper.GetHitResultUnderMouseWithSpread(_collisionMask, [_player.GetRid()], 
-            spread);
-        if (!hitResult.TryGetValue("position", out var hitPosition))
+        var hitResult = _helper.GetHitResultUnderMouseWithSpread(_collisionMask, [_player.GetRid()], spread);
+        if (!hitResult.TryGetValue("position", out var targetPosition))
         {
             return;
-        }
+        }        
 
-        SpawnTracer((Vector3)hitPosition);
+        SpawnTracer((Vector3)targetPosition);
 
         if (!hitResult.TryGetValue("collider", out var hitNode) 
             || (Node3D)hitNode is not IDamageable damageable)

@@ -1,8 +1,7 @@
-[gd_scene format=3 uid="uid://d23rseqydf2wa"]
+[gd_scene format=3 uid="uid://bj10myvc2qk24"]
 
-[ext_resource type="Script" uid="uid://bjqg62jk286um" path="res://scripts/Enemy/EnemyShooter.cs" id="1_6n8dw"]
-[ext_resource type="PackedScene" uid="uid://6rji4jqktugi" path="res://prefabs/projectile.tscn" id="2_cypye"]
-[ext_resource type="PackedScene" uid="uid://b86xyb0dkgwjo" path="res://prefabs/UI/health_bar_ui.tscn" id="2_yfjof"]
+[ext_resource type="Script" uid="uid://cqtwhn7kkiv16" path="res://scripts/Enemy/EnemyTank.cs" id="1_ohwoo"]
+[ext_resource type="PackedScene" uid="uid://b86xyb0dkgwjo" path="res://prefabs/UI/health_bar_ui.tscn" id="3_4h1ti"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_yfjof"]
 radius = 13.0
@@ -13,15 +12,16 @@ radius = 13.0
 albedo_color = Color(0.8560899, 0.35687447, 0.26757878, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6n8dw"]
-radius = 0.4580078
-height = 1.5869141
+radius = 0.7104492
+height = 2.137207
+
+[sub_resource type="BoxMesh" id="BoxMesh_c82c5"]
 
 [node name="Enemy" type="CharacterBody3D" unique_id=1937972577]
 collision_layer = 2
 collision_mask = 5
-script = ExtResource("1_6n8dw")
-MaxHealth = 50
-ProjectileScene = ExtResource("2_cypye")
+script = ExtResource("1_ohwoo")
+MovementSpeed = 3.0
 
 [node name="EnemyDetectionArea" type="Area3D" parent="." unique_id=442186486]
 collision_layer = 0
@@ -32,7 +32,7 @@ shape = SubResource("SphereShape3D_yfjof")
 debug_color = Color(0, 0.5950001, 0.7, 1)
 
 [node name="Pivot" type="Node3D" parent="." unique_id=909536654]
-transform = Transform3D(0.7242346, 0, 0, 0, 0.82976824, 0, 0, 0, 0.9999999, 0, 0, 0)
+transform = Transform3D(1.117787, 0, 0, 0, 1.0811286, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Legs" type="MeshInstance3D" parent="Pivot" unique_id=605956124]
 transform = Transform3D(0.5833414, 0, 0, 0, 0.5278766, 0, 0, 0, 0.4644112, 0, 0.53431135, 0)
@@ -60,10 +60,14 @@ mesh = SubResource("CapsuleMesh_ks3ws")
 surface_material_override/0 = SubResource("StandardMaterial3D_ks3ws")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=13438480]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83955836, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0669746, 0)
 shape = SubResource("CapsuleShape3D_6n8dw")
 
-[node name="HealthBarRoot" parent="." unique_id=1766194223 instance=ExtResource("2_yfjof")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1450663, 0)
+[node name="HealthBarRoot" parent="." unique_id=1766194223 instance=ExtResource("3_4h1ti")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.451425, 0)
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=794284444]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1405066966]
+transform = Transform3D(1, 0, 0, 0, 1.5769588, 0, 0, 0, 0.22236389, -0.14583474, 1.258054, -0.9632238)
+mesh = SubResource("BoxMesh_c82c5")
