@@ -18,6 +18,7 @@ roughness = 0.0
 emission = Color(1, 1, 1, 1)
 
 [node name="WeaponHeavy" type="Node3D" unique_id=1295996286]
+transform = Transform3D(1, 0, 0, 0, 0.9574153, -0.28871432, 0, 0.28871432, 0.9574153, 0, 0, 0)
 script = ExtResource("1_ph2b8")
 ReloadTime = 3.0
 Damage = 30

@@ -14,7 +14,6 @@ height = 1.7836914
 [node name="Player" type="CharacterBody3D" unique_id=1164382560]
 collision_mask = 3
 script = ExtResource("1_72ieh")
-Speed = 10
 
 [node name="Pivot" type="Node3D" parent="." unique_id=1962913918]
 

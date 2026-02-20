@@ -9,12 +9,23 @@ public partial class Player : CharacterBody3D
 {
     // How fast the player moves in meters per second.
     [Export]
-    public int Speed { get; set; } = 14;
+    private int BaseMovementSpeed { get; set; } = 9;
     [Export]
-    public float FireRate { get; set; } = 1f;
+    private int MovementSpeedWhileAiming { get; set; } = 3;
+    [Export]
+    public float OverallMaxAimSpread { get; set; } = 0.1f;
+    [Export]
+    public float MaxAimSpreadWhileAiming { get; set; } = 0.025f;
+    [Export]
+    public float SpreadLerpSpeed { get; set; } = 4f;
+
+    [Export]
+    public float FireRate { get; set; } = 1.5f;
     // The downward acceleration when in the air, in meters per second squared.
     [Export]
     public int FallAcceleration { get; set; } = 75;
+
+    private int _movementSpeed;
 
     private Vector3 _targetVelocity = Vector3.Zero;
     private Vector3 _direction;
@@ -42,10 +53,10 @@ public partial class Player : CharacterBody3D
     private Vector2 _crosshairRightDefaultPosition;
 
     private float _minAimSpread = 0f;
-    [Export]
-    public float MaxAimSpread { get; set; } = 0.1f;
-    private float _spreadLerpSpeed = 4f;
+    private float _maxAimSpread;
+
     private float _currentSpread;
+
 
     public override void _Ready()
     {
@@ -75,6 +86,11 @@ public partial class Player : CharacterBody3D
         _holsteredWeaponVisual.Visible = true;
         _holsteredWeaponHeavyVisual.Visible = true;
 
+        _maxAimSpread = OverallMaxAimSpread;
+        //MaxAimSpreadWhileAiming = OverallMaxAimSpread / 4;
+
+        _movementSpeed = BaseMovementSpeed;
+
         var sword = new InventoryItem("Sword", 1, 2);
         var sword2 = new InventoryItem("Sword", 1, 2);
         InventoryManager.Instance.TryPlaceItem(sword, 0, 0);
@@ -86,8 +102,8 @@ public partial class Player : CharacterBody3D
         RotateTowardsCursor();
 
         // aim spread
-        var spread = Velocity.Length() > 0.1f ? MaxAimSpread : _minAimSpread;
-        _currentSpread = Mathf.Lerp(_currentSpread, spread, (float)(_spreadLerpSpeed * delta));
+        var spread = Velocity.Length() > 0.1f ? _maxAimSpread : _minAimSpread;
+        _currentSpread = Mathf.Lerp(_currentSpread, spread, (float)(SpreadLerpSpeed * delta));
         if (_currentSpread < 0.001f)
         {
             _currentSpread = 0f;
@@ -121,6 +137,17 @@ public partial class Player : CharacterBody3D
             _direction.Z -= 1.0f;
         }
 
+        if (Input.IsActionPressed("aim"))
+        {
+            _maxAimSpread = MaxAimSpreadWhileAiming;
+            _movementSpeed = MovementSpeedWhileAiming;
+        }
+        else
+        {
+            _maxAimSpread = OverallMaxAimSpread;
+            _movementSpeed = BaseMovementSpeed;
+        }
+
         if (Input.IsActionJustPressed("shoot") && !_isWeaponHolstered && _canShoot)
         {
             if (_weapon.Visible)
@@ -132,7 +159,7 @@ public partial class Player : CharacterBody3D
                 _weaponHeavy.Shoot(_currentSpread);
             }
 
-            _currentSpread = MaxAimSpread;
+            _currentSpread = _maxAimSpread;
             _canShoot = false;
 
             GetTree().CreateTimer(_weapon.FireRate).Connect("timeout", new Callable(this, nameof(ResetCanShoot)));
@@ -198,8 +225,8 @@ public partial class Player : CharacterBody3D
     public override void _PhysicsProcess(double delta)
     {
         // Ground velocity
-        _targetVelocity.X = _direction.X * Speed;
-        _targetVelocity.Z = _direction.Z * Speed;
+        _targetVelocity.X = _direction.X * _movementSpeed;
+        _targetVelocity.Z = _direction.Z * _movementSpeed;
 
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
@@ -238,28 +265,28 @@ public partial class Player : CharacterBody3D
     private void UpdateCrosshair(float spread)
     {
         var mousePosition = _viewport.GetMousePosition();
-        
+
         _newCrosshair.Position = new Vector2(
             mousePosition.X - _newCrosshair.Size.X / 2,
             mousePosition.Y - _newCrosshair.Size.Y / 2);
-        
+
         var spreadMultiplier = 9f;
         var crosshairSpread = spread * 100 * spreadMultiplier;
-        GD.Print(crosshairSpread);
+        // GD.Print(crosshairSpread);
 
         if (_currentSpread > 0.001f)
         {
             _crosshairUp.Position = new Vector2(
-                _crosshairUpDefaultPosition.X, 
+                _crosshairUpDefaultPosition.X,
                 _crosshairUpDefaultPosition.Y - crosshairSpread);
             _crosshairDown.Position = new Vector2(
-                _crosshairDownDefaultPosition.X, 
+                _crosshairDownDefaultPosition.X,
                 _crosshairDownDefaultPosition.Y + crosshairSpread);
 
             _crosshairLeft.Position = new Vector2(
                 _crosshairLeftDefaultPosition.X - crosshairSpread, _crosshairLeftDefaultPosition.Y);
             _crosshairRight.Position = new Vector2(
-                _crosshairRightDefaultPosition.X + crosshairSpread, _crosshairRightDefaultPosition.Y);                
+                _crosshairRightDefaultPosition.X + crosshairSpread, _crosshairRightDefaultPosition.Y);
         }
 
         if (_currentSpread < 0.001f)
@@ -269,6 +296,6 @@ public partial class Player : CharacterBody3D
 
             _crosshairLeft.Position = _crosshairLeftDefaultPosition;
             _crosshairRight.Position = _crosshairRightDefaultPosition;
-        }      
+        }
     }
 }
