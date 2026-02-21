@@ -32,6 +32,8 @@ public partial class InventoryUI : Control
 
 	public override void _Draw()
 	{
+		// TODO: somehow clear the inventory from rectangles
+
 		for (int x = 0; x < InventoryManager.Instance.Grid.Width; x++)
 		{
 			for (int y = 0; y < InventoryManager.Instance.Grid.Height; y++)
@@ -41,7 +43,7 @@ public partial class InventoryUI : Control
 				var item = InventoryManager.Instance.Grid.GetItem(x, y);
 				if (item is not null)
 				{
-					DrawRect(rect, item.DebugColor);
+					//DrawRect(rect, item.DebugColor);
 				}
 
 				DrawRect(rect, new Color("black"), false, 1);

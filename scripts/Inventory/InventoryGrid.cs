@@ -46,11 +46,41 @@ public class InventoryGrid
                 }
             }
         }
-    }    
+    }
 
     public InventoryItem GetItem(int x, int y)
     {
         return _grid[x, y];
+    }
+
+    public bool HandleWeaponReload(string ammoType)
+    {
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                var item = _grid[x, y];
+                if (item is null)
+                {
+                    continue;
+                }
+
+                if (item.Type == "SmallAmmo")
+                {
+                    if (item.CurrentStackSize > 0)
+                    {
+                        item.CurrentStackSize--;
+                        if (item.CurrentStackSize <= 0)
+                        {
+                            RemoveItem(item);
+                        }
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     private bool CanPlaceItem(InventoryItem item, int itemStartPositionX, int itemStartPositionY)
@@ -58,7 +88,7 @@ public class InventoryGrid
         for (int x = 0; x < item.Width; x++)
         {
             for (int y = 0; y < item.Height; y++)
-            {   
+            {
                 var gridHeight = _grid.GetLength(1);
                 var isEnoughSpaceVertically = gridHeight < itemStartPositionY + item.Height;
                 if (isEnoughSpaceVertically)

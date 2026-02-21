@@ -40,4 +40,17 @@ public partial class InventoryManager : Node
 	{
 		TryPlaceItem(item, item.GridPositionX, item.GridPositionY);
 	}
+
+	public bool TryReloadWeapon(string ammoType)
+	{
+		if (Grid.HandleWeaponReload(ammoType))
+		{
+			EmitSignal(SignalName.InventoryChanged);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

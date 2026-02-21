@@ -18,13 +18,9 @@ public partial class Player : CharacterBody3D
     public float MaxAimSpreadWhileAiming { get; set; } = 0.025f;
     [Export]
     public float SpreadLerpSpeed { get; set; } = 4f;
-
     [Export]
     public float FireRate { get; set; } = 1.5f;
-    // The downward acceleration when in the air, in meters per second squared.
-    [Export]
-    public int FallAcceleration { get; set; } = 75;
-
+    
     private int _movementSpeed;
 
     private Vector3 _targetVelocity = Vector3.Zero;
@@ -91,10 +87,10 @@ public partial class Player : CharacterBody3D
 
         _movementSpeed = BaseMovementSpeed;
 
-        var sword = new InventoryItem("Sword", 1, 2);
-        var sword2 = new InventoryItem("Sword", 1, 2);
+        var sword = new InventoryItem("Sword", 1, 2, "green", 1);
+        var ammo = new InventoryItem("Ammo", 1, 1, "orange", 16, 1, "SmallAmmo");
         InventoryManager.Instance.TryPlaceItem(sword, 0, 0);
-        InventoryManager.Instance.TryPlaceItem(sword2, 2, 0);
+        InventoryManager.Instance.TryPlaceItem(ammo, 1, 0);
     }
 
     public override void _Process(double delta)
@@ -135,6 +131,14 @@ public partial class Player : CharacterBody3D
         if (Input.IsActionPressed("move_forward"))
         {
             _direction.Z -= 1.0f;
+        }
+
+        if (Input.IsActionJustPressed("reload"))
+        {
+            if (_weapon.Visible && _weapon.IsMagEmpty())
+            {
+                _weapon.Reload();
+            }
         }
 
         if (Input.IsActionPressed("aim"))
@@ -227,12 +231,6 @@ public partial class Player : CharacterBody3D
         // Ground velocity
         _targetVelocity.X = _direction.X * _movementSpeed;
         _targetVelocity.Z = _direction.Z * _movementSpeed;
-
-        // Vertical velocity
-        if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
-        {
-            _targetVelocity.Y -= FallAcceleration * (float)delta;
-        }
 
         // Moving the character
         Velocity = _targetVelocity;

@@ -9,9 +9,7 @@ public partial class InventoryItemUI : Control
 	public InventoryItem Item { get; private set; }
 
 	private InventoryUI _inventoryUI;
-	private const int CellSize = 32;
-	private int _originalX;
-	private int _originalY;
+	private const int CellSize = 50;
 
 	public override void _Ready()
 	{
@@ -22,6 +20,22 @@ public partial class InventoryItemUI : Control
 	{
 		Item = item;
 		UpdateSize();
+
+		var label = new Label
+		{
+			Text = item.CurrentStackSize.ToString(),
+			MouseFilter = MouseFilterEnum.Pass
+		};
+
+		var itemVisual = new ColorRect
+		{
+			Color = new Color(item.DebugColor),
+			Size = new Vector2(CellSize * item.Width, CellSize * item.Height),
+			MouseFilter = MouseFilterEnum.Pass
+		};
+
+		AddChild(itemVisual);
+		AddChild(label);
 	}
 
 	private void UpdateSize()
