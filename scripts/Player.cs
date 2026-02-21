@@ -30,7 +30,7 @@ public partial class Player : CharacterBody3D
     private Weapon _weapon;
     private WeaponHeavy _weaponHeavy;
     private bool _isWeaponHolstered = true;
-    private Control _inventoryUI;
+    private Window _inventoryUI;
     private Helper _helper;
     private bool _canShoot = true;
     private Viewport _viewport;
@@ -63,7 +63,7 @@ public partial class Player : CharacterBody3D
         _weaponHeavy = GetNode<WeaponHeavy>("Pivot/WeaponHeavy");
         _holsteredWeaponVisual = GetNode<Weapon>("Pivot/HolsteredWeapon");
         _holsteredWeaponHeavyVisual = GetNode<WeaponHeavy>("Pivot/HolsteredWeaponHeavy");
-        _inventoryUI = GetNode<Control>("InventoryUI");
+        _inventoryUI = GetNode<Window>("InventoryUI");
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
         _newCrosshair = GetTree().CurrentScene.GetNode<Control>("UI/NewCrosshair");
 

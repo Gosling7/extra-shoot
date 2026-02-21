@@ -46,7 +46,7 @@ public partial class InventoryUI : Control
 					//DrawRect(rect, item.DebugColor);
 				}
 
-				DrawRect(rect, new Color("black"), false, 1);
+				//DrawRect(rect, new Color("black"), false, 1);
 			}
 		}
 	}
