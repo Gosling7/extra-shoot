@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" uid="uid://v18ejdrjrm50" path="res://scripts/Weapon.cs" id="1_dkuqq"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_72ieh"]
-size = Vector3(0.185, 0.275, 0.91)
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_dkuqq"]
 top_radius = 0.01
 bottom_radius = 0.01
@@ -20,21 +17,7 @@ emission = Color(1, 1, 1, 1)
 [node name="Weapon" type="Node3D" unique_id=1295996286]
 script = ExtResource("1_dkuqq")
 
-[node name="Body" type="MeshInstance3D" parent="." unique_id=2076747142]
-transform = Transform3D(0.34842288, 0, 0, 0, 0.69553065, 0, 0, 0, 0.32290658, 0, 0.26245373, -0.2199541)
-mesh = SubResource("BoxMesh_72ieh")
-
-[node name="Mag" type="MeshInstance3D" parent="." unique_id=482775076]
-transform = Transform3D(0.6609891, 0, 0, 0, 0.43206924, 0, 0, 0, 0.16391799, 0, 0.27095324, -0.2331021)
-mesh = SubResource("BoxMesh_72ieh")
-
-[node name="Barrel" type="MeshInstance3D" parent="." unique_id=414013537]
-transform = Transform3D(0.34842288, 0, 0, 0, 0.41765895, 0, 0, 0, 0.5962449, 0, 0.27697128, -0.5519903)
-mesh = SubResource("BoxMesh_72ieh")
-
-[node name="Handle" type="MeshInstance3D" parent="." unique_id=589129676]
-transform = Transform3D(0.3484229, 0, 0, 0, 0.14397056, -0.35782987, 0, 0.58398646, 0.08821603, 0, 0.062336713, -0.043255284)
-mesh = SubResource("BoxMesh_72ieh")
+[node name="Model" type="Node3D" parent="." unique_id=1892915233]
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=1415312969]
 transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.275427, -0.82664067)

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://tmb751uphkhq"]
+
+[ext_resource type="Script" uid="uid://bfj22tqs65gxf" path="res://scripts/UI/AmmoUI.cs" id="1_0ld7q"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_0hllr"]
+font_size = 24
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0hllr"]
+viewport_path = NodePath("SubViewport")
+
+[node name="AmmoUI" type="Node3D" unique_id=2020970134]
+script = ExtResource("1_0ld7q")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=160777442]
+size = Vector2i(100, 50)
+
+[node name="Label" type="Label" parent="SubViewport" unique_id=1849779808]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "1/3"
+label_settings = SubResource("LabelSettings_0hllr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=858280070]
+visible = false
+billboard = 1
+texture = SubResource("ViewportTexture_0hllr")

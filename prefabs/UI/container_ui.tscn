@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://rx057rmo87s1"]
+[gd_scene format=3 uid="uid://j72jqwvqufrr"]
 
-[ext_resource type="Script" uid="uid://bs272800rrd7f" path="res://scripts/UI/InventoryUI.cs" id="1_t2y1r"]
+[ext_resource type="Script" uid="uid://bs272800rrd7f" path="res://scripts/UI/InventoryUI.cs" id="1_repkx"]
 
 [node name="InventoryWindow" type="Window" unique_id=2046401402]
 oversampling_override = 1.0
@@ -14,7 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_t2y1r")
+script = ExtResource("1_repkx")
 
 [node name="Panel" type="Panel" parent="InventoryUI" unique_id=716487643]
 layout_mode = 1

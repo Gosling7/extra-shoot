@@ -1,5 +1,5 @@
 using System;
-using ExtraShoot.scripts.Inventory;
+using System.Collections.Generic;
 using ExtraShoot.scripts.Utilities;
 using Godot;
 
@@ -7,7 +7,6 @@ namespace ExtraShoot.scripts;
 
 public partial class Player : CharacterBody3D
 {
-    // How fast the player moves in meters per second.
     [Export]
     private int BaseMovementSpeed { get; set; } = 9;
     [Export]
@@ -20,22 +19,20 @@ public partial class Player : CharacterBody3D
     public float SpreadLerpSpeed { get; set; } = 4f;
     [Export]
     public float FireRate { get; set; } = 1.5f;
-    
+
     private int _movementSpeed;
 
     private Vector3 _targetVelocity = Vector3.Zero;
     private Vector3 _direction;
-    private Marker3D _muzzle;
     private Camera3D _camera;
-    private Weapon _weapon;
-    private WeaponHeavy _weaponHeavy;
+    private Weapon _revolver;
+    private Weapon _rifle;
     private bool _isWeaponHolstered = true;
-    private Window _inventoryUI;
     private Helper _helper;
     private bool _canShoot = true;
     private Viewport _viewport;
-    private Node3D _holsteredWeaponVisual;
-    private Node3D _holsteredWeaponHeavyVisual;
+    private Node3D _holsteredRevolverVisual;
+    private Node3D _holsteredRifleVisual;
 
     private Control _newCrosshair;
     private TextureRect _crosshairUp;
@@ -50,22 +47,41 @@ public partial class Player : CharacterBody3D
 
     private float _minAimSpread = 0f;
     private float _maxAimSpread;
-
     private float _currentSpread;
 
+    private int _revolverAmmoCount;
+    private int _rifleAmmoCount;
+
+    private Label3D _ammoLabel;
+
+    private List<Weapon> _weapons = [];
+    private Weapon _currentWeapon;
+    private Dictionary<Weapon, int> _reserveAmmo = [];
+
+    [Signal]
+    public delegate void UpdateAmmoUIEventHandler();
 
     public override void _Ready()
     {
+        _revolver = GetNode<Weapon>("Pivot/Revolver");
+        _rifle = GetNode<Weapon>("Pivot/Rifle");
+        _weapons.AddRange([_revolver, _rifle]);
+        _reserveAmmo[_revolver] = 9;
+        _reserveAmmo[_rifle] = 2;
+        _currentWeapon = null;
+
+        foreach (var weapon in _weapons)
+        {
+            weapon.Visible = false;
+        }
+
         _viewport = GetViewport();
-        _muzzle = GetNode<Marker3D>("Pivot/Weapon/Muzzle");
         _camera = _viewport.GetCamera3D();
-        _weapon = GetNode<Weapon>("Pivot/Weapon");
-        _weaponHeavy = GetNode<WeaponHeavy>("Pivot/WeaponHeavy");
-        _holsteredWeaponVisual = GetNode<Weapon>("Pivot/HolsteredWeapon");
-        _holsteredWeaponHeavyVisual = GetNode<WeaponHeavy>("Pivot/HolsteredWeaponHeavy");
-        _inventoryUI = GetNode<Window>("InventoryUI");
+        _holsteredRevolverVisual = GetNode<Weapon>("Pivot/HolsteredRevolver");
+        _holsteredRifleVisual = GetNode<Weapon>("Pivot/HolsteredRifle");
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
         _newCrosshair = GetTree().CurrentScene.GetNode<Control>("UI/NewCrosshair");
+        _ammoLabel = GetNode<Label3D>("Label3D");
 
         _crosshairUp = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/up");
         _crosshairDown = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/down");
@@ -77,27 +93,52 @@ public partial class Player : CharacterBody3D
         _crosshairLeftDefaultPosition = _crosshairLeft.Position;
         _crosshairRightDefaultPosition = _crosshairRight.Position;
 
-        _weapon.Visible = false;
-        _weaponHeavy.Visible = false;
-        _holsteredWeaponVisual.Visible = true;
-        _holsteredWeaponHeavyVisual.Visible = true;
-
         _maxAimSpread = OverallMaxAimSpread;
         //MaxAimSpreadWhileAiming = OverallMaxAimSpread / 4;
 
         _movementSpeed = BaseMovementSpeed;
 
-        var sword = new InventoryItem("Sword", 1, 2, "green", 1);
-        var ammo = new InventoryItem("Ammo", 1, 1, "orange", 16, 1, "SmallAmmo");
-        InventoryManager.Instance.TryPlaceItem(sword, 0, 0);
-        InventoryManager.Instance.TryPlaceItem(ammo, 1, 0);
+        _revolver.WeaponShot += OnWeaponShot;
+        _rifle.WeaponShot += OnWeaponShot;
+
+        _revolver.WeaponReloaded += OnWeaponReloaded;
+        _rifle.WeaponReloaded += OnWeaponReloaded;
+
+        // UpdateAmmoLabel();
+    }
+
+    private void OnWeaponReloaded()
+    {
+        // _reserveAmmo[_currentWeapon]
+        UpdateAmmoLabel();
+    }
+
+    private void UpdateAmmoLabel()
+    {
+        if (_currentWeapon is null)
+        {
+            _ammoLabel.Visible = false;
+        }
+        if (_currentWeapon is not null && !_ammoLabel.Visible)
+        {
+            _ammoLabel.Visible = true;
+        }
+
+        _ammoLabel.Text = $"{_currentWeapon.AmmoCurrentlyInMag}/{_reserveAmmo[_currentWeapon]}";
+    }
+
+    private void OnWeaponShot(int usedAmmoCount)
+    {
+        _reserveAmmo[_currentWeapon]--;
+        GD.Print($"{_currentWeapon.Name} ammo: {_reserveAmmo[_currentWeapon]}");
+
+        UpdateAmmoLabel();
     }
 
     public override void _Process(double delta)
     {
         RotateTowardsCursor();
 
-        // aim spread
         var spread = Velocity.Length() > 0.1f ? _maxAimSpread : _minAimSpread;
         _currentSpread = Mathf.Lerp(_currentSpread, spread, (float)(SpreadLerpSpeed * delta));
         if (_currentSpread < 0.001f)
@@ -133,14 +174,6 @@ public partial class Player : CharacterBody3D
             _direction.Z -= 1.0f;
         }
 
-        if (Input.IsActionJustPressed("reload"))
-        {
-            if (_weapon.Visible && _weapon.IsMagEmpty())
-            {
-                _weapon.Reload();
-            }
-        }
-
         if (Input.IsActionPressed("aim"))
         {
             _maxAimSpread = MaxAimSpreadWhileAiming;
@@ -152,79 +185,65 @@ public partial class Player : CharacterBody3D
             _movementSpeed = BaseMovementSpeed;
         }
 
-        if (Input.IsActionJustPressed("shoot") && !_isWeaponHolstered && _canShoot)
+        if (Input.IsActionJustPressed("reload"))
         {
-            if (_weapon.Visible)
+            if (_currentWeapon is not null && _currentWeapon.IsMagEmpty())
             {
-                _weapon.Shoot(_currentSpread);
+                _currentWeapon.Reload(_reserveAmmo[_currentWeapon]);
             }
-            if (_weaponHeavy.Visible)
+        }
+
+        if (Input.IsActionJustPressed("shoot"))
+        {
+            if (_currentWeapon is null)
             {
-                _weaponHeavy.Shoot(_currentSpread);
+                return;
+            }
+            if (!_canShoot || _reserveAmmo[_currentWeapon] <= 0)
+            {
+                return;
             }
 
+            _currentWeapon.Shoot(_currentSpread);
             _currentSpread = _maxAimSpread;
             _canShoot = false;
 
-            GetTree().CreateTimer(_weapon.FireRate).Connect("timeout", new Callable(this, nameof(ResetCanShoot)));
+            EmitSignal(SignalName.UpdateAmmoUI);
+
+            GetTree().CreateTimer(_currentWeapon.FireRate).Connect("timeout", new Callable(this, nameof(ResetCanShoot)));
         }
 
-        if (Input.IsActionJustPressed("holster"))
+        if (Input.IsActionJustPressed("toggle_revolver"))
         {
-            _weapon.Visible = !_weapon.Visible;
-            if (_weapon.Visible)
-            {
-                _isWeaponHolstered = false;
-                _holsteredWeaponVisual.Visible = false;
-                Input.MouseMode = Input.MouseModeEnum.Hidden;
-                _newCrosshair.Visible = true;
-
-                if (_weaponHeavy.Visible)
-                {
-                    _weaponHeavy.Visible = false;
-                    _holsteredWeaponHeavyVisual.Visible = true;
-                }
-            }
-            else
-            {
-                _isWeaponHolstered = true;
-                _holsteredWeaponVisual.Visible = true;
-                Input.MouseMode = Input.MouseModeEnum.Visible;
-                _newCrosshair.Visible = false;
-            }
+            ToggleWeapon(_revolver);
         }
 
-        if (Input.IsActionJustPressed("holster_heavy"))
+        if (Input.IsActionJustPressed("toggle_rifle"))
         {
-            _weaponHeavy.Visible = !_weaponHeavy.Visible;
-            if (_weaponHeavy.Visible)
-            {
-                _isWeaponHolstered = false;
-                _holsteredWeaponHeavyVisual.Visible = false;
-                Input.MouseMode = Input.MouseModeEnum.Hidden;
-                _newCrosshair.Visible = true;
-
-                if (_weapon.Visible)
-                {
-                    _weapon.Visible = false;
-                    _holsteredWeaponVisual.Visible = true;
-                }
-            }
-            else
-            {
-                _isWeaponHolstered = true;
-                _holsteredWeaponHeavyVisual.Visible = true;
-                Input.MouseMode = Input.MouseModeEnum.Visible;
-                _newCrosshair.Visible = false;
-            }
-        }
-
-        if (Input.IsActionJustPressed("toggle_inventory"))
-        {
-            _inventoryUI.Visible = !_inventoryUI.Visible;
+            ToggleWeapon(_rifle);
         }
     }
 
+    private void ToggleWeapon(Weapon weaponToEquip)
+    {
+        if (_currentWeapon == weaponToEquip)
+        {
+            _currentWeapon.Visible = false;
+            _currentWeapon = null;
+            Input.MouseMode = Input.MouseModeEnum.Visible;
+            _newCrosshair.Visible = false;
+            UpdateAmmoLabel();
+            return;
+        }
+
+        _currentWeapon = weaponToEquip;
+        _currentWeapon.Visible = true;
+
+        Input.MouseMode = Input.MouseModeEnum.Hidden;
+        _newCrosshair.Visible = true;
+
+        UpdateAmmoLabel();
+    }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -248,11 +267,6 @@ public partial class Player : CharacterBody3D
         var position = (Vector3)pos;
         var lookAtTarget = new Vector3(position.X, Position.Y, position.Z);
         LookAt(lookAtTarget);
-
-        // GD.Print($"Mouse position in Viewport: {mousePosition}");
-        // GD.Print($"Origin: {origin}");
-        // GD.Print($"End: {end}");
-        // GD.Print($"Result: {result}");
     }
 
     private void ResetCanShoot()

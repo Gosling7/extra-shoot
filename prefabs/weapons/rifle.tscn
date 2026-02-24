@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://b2i8au60es0wu"]
+
+[ext_resource type="PackedScene" uid="uid://cniqowobxfe01" path="res://prefabs/weapons/weapon.tscn" id="1_7n5dt"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7n5dt"]
+size = Vector3(0.185, 0.275, 0.91)
+
+[node name="Weapon" unique_id=1295996286 instance=ExtResource("1_7n5dt")]
+MagSize = 1
+ReloadTime = 2.5
+Damage = 30
+
+[node name="Body" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="0" unique_id=46993262]
+transform = Transform3D(0.34842288, 0, 0, 0, 0.69553065, 0, 0, 0, 0.32290658, 0, 0.26245373, -0.2199541)
+mesh = SubResource("BoxMesh_7n5dt")
+
+[node name="Mag" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="1" unique_id=857358706]
+transform = Transform3D(0.6609891, 0, 0, 0, 0.43206924, 0, 0, 0, 0.16391799, 0, 0.27095324, -0.2331021)
+mesh = SubResource("BoxMesh_7n5dt")
+
+[node name="Barrel" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="2" unique_id=1092342590]
+transform = Transform3D(0.34842288, 0, 0, 0, 0.41765895, 0, 0, 0, 2.1543741, 0, 0.27697128, -0.5519903)
+mesh = SubResource("BoxMesh_7n5dt")
+
+[node name="Handle" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="3" unique_id=1668931989]
+transform = Transform3D(0.3484229, 0, 0, 0, 0.14397056, -0.35782987, 0, 0.58398646, 0.08821603, 0, 0.062336713, -0.043255284)
+mesh = SubResource("BoxMesh_7n5dt")
+
+[node name="Handle2" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="4" unique_id=933369837]
+transform = Transform3D(0.3484229, 0, 0, 0, 0.0021724608, -0.2725458, 0, 0.31915155, 0.001855216, 0, 0.2404041, 0.38438857)
+mesh = SubResource("BoxMesh_7n5dt")
+
+[node name="Muzzle" parent="." index="1" unique_id=1415312969]
+transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.275427, -1.5247917)

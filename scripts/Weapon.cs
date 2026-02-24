@@ -1,5 +1,4 @@
 using ExtraShoot.scripts.Interfaces;
-using ExtraShoot.scripts.Inventory;
 using ExtraShoot.scripts.Utilities;
 using Godot;
 using System;
@@ -8,18 +7,24 @@ namespace ExtraShoot.scripts;
 
 public partial class Weapon : Node3D
 {
-    [Export] public int MagSize = 3;        // Total bullets per mag
-    [Export] public float FireRate = 0.5f;  // Seconds between shots
+    [Export] public int MagSize = 3;
+    [Export] public float FireRate = 0.5f;
     [Export] public float ReloadTime = 1.5f;
     [Export] public int Damage = 10;
     [Export] public float DelayToApplyDamageInSec = 0.1f;
+
+    public int AmmoCurrentlyInMag { get; private set; }
 
     private Helper _helper;
     private uint _collisionMask;
     private Player _player;
     private MeshInstance3D _tracer;
     private Marker3D _muzzle;
-    private int _ammoCurrentlyInMag;
+
+    [Signal]
+    public delegate void WeaponShotEventHandler(int usedAmmoCount);
+    [Signal]
+    public delegate void WeaponReloadedEventHandler();
 
     public override void _Ready()
     {
@@ -29,18 +34,17 @@ public partial class Weapon : Node3D
         _muzzle = GetNode<Marker3D>("Muzzle");
         _tracer = GetNode<MeshInstance3D>("Muzzle/Tracer");
 
-        _ammoCurrentlyInMag = MagSize;
+        AmmoCurrentlyInMag = MagSize;
     }
 
     public void Shoot(float spread)
     {
-        if (_ammoCurrentlyInMag <= 0)
+        if (AmmoCurrentlyInMag <= 0)
         {
             GD.Print("Out of ammo in mag");
             return;
         }
 
-        //GD.Print("SHOOT()!!!!!!!!!!!!!!!!!");
         var hitResult = _helper.GetHitResultUnderMouseWithSpread(_collisionMask, [_player.GetRid()],
             spread);
         if (!hitResult.TryGetValue("position", out var hitPosition))
@@ -49,7 +53,8 @@ public partial class Weapon : Node3D
         }
 
         SpawnTracer((Vector3)hitPosition);
-        _ammoCurrentlyInMag--;
+        AmmoCurrentlyInMag--;
+        EmitSignal(SignalName.WeaponShot, 1);
 
         if (!hitResult.TryGetValue("collider", out var hitNode)
             || (Node3D)hitNode is not IDamageable damageable)
@@ -58,32 +63,29 @@ public partial class Weapon : Node3D
         }
 
         var timer = GetTree().CreateTimer(DelayToApplyDamageInSec);
-        timer.Timeout += () => ApplyDelayedDamage(damageable);
+        timer.Timeout += () => damageable?.TakeDamage(Damage);
     }
 
-    public void Reload()
+    public void Reload(int ammoCount)
     {
-        GD.Print("Reloading");
-        var timer = GetTree().CreateTimer(ReloadTime);
-        timer.Timeout += () => {
-            var success = InventoryManager.Instance.TryReloadWeapon("SmallAmmo");
-            if (!success)
-            {
-                GD.Print("No ammo for reload");
-                return;
-            }
+        if (ammoCount <= 0)
+        {
+            GD.Print("No ammo for reload");
+            return;
+        }
 
-            _ammoCurrentlyInMag = MagSize;
+        GD.Print("Reloading");
+
+        var timer = GetTree().CreateTimer(ReloadTime);
+        timer.Timeout += () =>
+        {
+            AmmoCurrentlyInMag = MagSize;
             GD.Print("Weapon reloaded");
+            EmitSignal(SignalName.WeaponReloaded);
         };
     }
 
-    public bool IsMagEmpty() => _ammoCurrentlyInMag <= 0;
-
-    private void ApplyDelayedDamage(IDamageable damageable)
-    {
-        damageable?.TakeDamage(Damage);
-    }
+    public bool IsMagEmpty() => AmmoCurrentlyInMag <= 0;
 
     private void SpawnTracer(Vector3 targetPosition)
     {
@@ -119,7 +121,6 @@ public partial class Weapon : Node3D
     private void ResetTracer(float distance, Node duplicateTracer)
     {
         duplicateTracer.QueueFree();
-        //_tracer.Visible = false;
         _tracer.Position = new Vector3(
             _tracer.Position.X,
             _tracer.Position.Y,
