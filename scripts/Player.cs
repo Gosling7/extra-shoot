@@ -109,7 +109,7 @@ public partial class Player : CharacterBody3D
 
     private void OnWeaponReloaded()
     {
-        // _reserveAmmo[_currentWeapon]
+        _reserveAmmo[_currentWeapon] -= _currentWeapon.MagSize;
         UpdateAmmoLabel();
     }
 
@@ -122,15 +122,14 @@ public partial class Player : CharacterBody3D
         if (_currentWeapon is not null && !_ammoLabel.Visible)
         {
             _ammoLabel.Visible = true;
+            _ammoLabel.Text = $"{_currentWeapon.AmmoCurrentlyInMag}/{_reserveAmmo[_currentWeapon]}";
         }
-
-        _ammoLabel.Text = $"{_currentWeapon.AmmoCurrentlyInMag}/{_reserveAmmo[_currentWeapon]}";
     }
 
     private void OnWeaponShot(int usedAmmoCount)
     {
-        _reserveAmmo[_currentWeapon]--;
-        GD.Print($"{_currentWeapon.Name} ammo: {_reserveAmmo[_currentWeapon]}");
+        // _reserveAmmo[_currentWeapon]--;
+        // GD.Print($"{_currentWeapon.Name} ammo: {_reserveAmmo[_currentWeapon]}");
 
         UpdateAmmoLabel();
     }
