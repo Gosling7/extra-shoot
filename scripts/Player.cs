@@ -7,36 +7,20 @@ namespace ExtraShoot.scripts;
 
 public partial class Player : CharacterBody3D
 {
-    // Weapon should have these
-    private float _currentAimSpread;
-    private float _movementAimSpread;
-    private float _recoilAimSpread;
-    [Export] private float _recoilPerShot = 0.1f;
-    [Export] private float _maxAimSpread = 0.15f;
-    [Export] private float _recoilRecoverySpeed = 5f;
-    [Export] private float _movementAimSpreadIncreaseSpeed = 20f;
-    [Export] private float _movementAimSpreadDecreaseSpeed = 7f;
-
     [Export]
     private int BaseMovementSpeed { get; set; } = 9;
     [Export]
     private int MovementSpeedWhileAiming { get; set; } = 4;
-    // [Export]
-    // public float OverallMaxAimSpread { get; set; } = 0.1f;
-    // [Export]
-    // public float MaxAimSpreadWhileAiming { get; set; } = 0.025f;
-    // [Export]
-    // public float SpreadLerpSpeed { get; set; } = 4f;
     [Export]
     public float FireRate { get; set; } = 1.5f;
 
-    [Export] private int _movementSpeed;
+    [Export] public int MovementSpeed { get; private set; }
 
     private Vector3 _targetVelocity = Vector3.Zero;
     private Vector3 _direction;
     private Camera3D _camera;
-    private Weapon _revolver;
-    private Weapon _rifle;
+    public Weapon _revolver;
+    public Weapon _rifle;
     private bool _isWeaponHolstered = true;
     private Helper _helper;
     private bool _canShoot = true;
@@ -45,13 +29,11 @@ public partial class Player : CharacterBody3D
     private Label3D _ammoLabel;
 
     private List<Weapon> _weapons = [];
-    private Weapon _currentWeapon;
+    public Weapon CurrentWeapon { get; private set; }
     private Dictionary<Weapon, int> _reserveAmmo = [];
 
     [Signal]
     public delegate void UpdateAmmoUIEventHandler();
-    [Signal]
-    public delegate void AimSpreadChangedEventHandler(float spread);
     [Signal]
     public delegate void CrosshairVisibilityChangedEventHandler(bool isVisible);
 
@@ -62,7 +44,7 @@ public partial class Player : CharacterBody3D
         _weapons.AddRange([_revolver, _rifle]);
         _reserveAmmo[_revolver] = 9;
         _reserveAmmo[_rifle] = 2;
-        _currentWeapon = null;
+        CurrentWeapon = null;
 
         foreach (var weapon in _weapons)
         {
@@ -74,10 +56,7 @@ public partial class Player : CharacterBody3D
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
         _ammoLabel = GetNode<Label3D>("Label3D");
 
-        //_maxAimSpread = OverallMaxAimSpread;
-        //MaxAimSpreadWhileAiming = OverallMaxAimSpread / 4;
-
-        _movementSpeed = BaseMovementSpeed;
+        MovementSpeed = BaseMovementSpeed;
 
         _revolver.WeaponShot += OnWeaponShot;
         _rifle.WeaponShot += OnWeaponShot;
@@ -90,18 +69,14 @@ public partial class Player : CharacterBody3D
     {
         RotateTowardsCursor();
 
-        UpdateAimSpread(delta);
-
-        UpdateCrosshair(_currentAimSpread);
-
         HandleInput();
     }
 
     public override void _PhysicsProcess(double delta)
     {
         // Ground velocity
-        _targetVelocity.X = _direction.X * _movementSpeed;
-        _targetVelocity.Z = _direction.Z * _movementSpeed;
+        _targetVelocity.X = _direction.X * MovementSpeed;
+        _targetVelocity.Z = _direction.Z * MovementSpeed;
 
         // Moving the character
         Velocity = _targetVelocity;
@@ -110,44 +85,26 @@ public partial class Player : CharacterBody3D
 
     private void OnWeaponReloaded()
     {
-        _reserveAmmo[_currentWeapon] -= _currentWeapon.MagSize;
+        _reserveAmmo[CurrentWeapon] -= CurrentWeapon.MagSize;
         UpdateAmmoLabel();
     }
 
     private void UpdateAmmoLabel()
     {
-        if (_currentWeapon is null)
+        if (CurrentWeapon is null)
         {
             _ammoLabel.Visible = false;
         }
-        if (_currentWeapon is not null)
+        if (CurrentWeapon is not null)
         {
             _ammoLabel.Visible = true;
-            _ammoLabel.Text = $"{_currentWeapon.AmmoCurrentlyInMag}/{_reserveAmmo[_currentWeapon]}";
+            _ammoLabel.Text = $"{CurrentWeapon.AmmoCurrentlyInMag}/{_reserveAmmo[CurrentWeapon]}";
         }
     }
 
     private void OnWeaponShot(int usedAmmoCount)
     {
-        _recoilAimSpread += _recoilPerShot;
         UpdateAmmoLabel();
-    }
-
-    private void UpdateAimSpread(double delta)
-    {
-        var moveRatio = Mathf.Clamp(Velocity.Length() / _movementSpeed, 0f, 1f);
-
-        var targetMovementSpread = moveRatio * _maxAimSpread;
-
-        var aimSpreadSpeed = targetMovementSpread > _movementAimSpread
-            ? _movementAimSpreadIncreaseSpeed
-            : _movementAimSpreadDecreaseSpeed;
-
-        _movementAimSpread = Mathf.Lerp(_movementAimSpread, targetMovementSpread, (float)(aimSpreadSpeed * delta));
-
-        _recoilAimSpread = Mathf.Lerp(_recoilAimSpread, 0f, (float)(_recoilRecoverySpeed * delta));
-
-        _currentAimSpread = _movementAimSpread + _recoilAimSpread;
     }
 
     private void HandleInput()
@@ -174,40 +131,39 @@ public partial class Player : CharacterBody3D
         if (Input.IsActionPressed("aim"))
         {
             // _maxAimSpread = MaxAimSpreadWhileAiming;
-            _movementSpeed = MovementSpeedWhileAiming;
+            MovementSpeed = MovementSpeedWhileAiming;
         }
         else
         {
             // _maxAimSpread = OverallMaxAimSpread;
-            _movementSpeed = BaseMovementSpeed;
+            MovementSpeed = BaseMovementSpeed;
         }
 
         if (Input.IsActionJustPressed("reload"))
         {
-            if (_currentWeapon is not null && _currentWeapon.IsMagEmpty())
+            if (CurrentWeapon is not null && CurrentWeapon.IsMagEmpty())
             {
-                _currentWeapon.Reload(_reserveAmmo[_currentWeapon]);
+                CurrentWeapon.Reload(_reserveAmmo[CurrentWeapon]);
             }
         }
 
         if (Input.IsActionJustPressed("shoot"))
         {
-            if (_currentWeapon is null)
+            if (CurrentWeapon is null)
             {
                 return;
             }
-            if (!_canShoot || _reserveAmmo[_currentWeapon] <= 0)
+            if (!_canShoot || _reserveAmmo[CurrentWeapon] <= 0)
             {
                 return;
             }
 
-            _currentWeapon.Shoot(_currentAimSpread);
-            _currentAimSpread = _maxAimSpread;
+            CurrentWeapon.Shoot();
             _canShoot = false;
 
             EmitSignal(SignalName.UpdateAmmoUI);
 
-            GetTree().CreateTimer(_currentWeapon.FireRate).Connect("timeout", new Callable(this, nameof(ResetCanShoot)));
+            GetTree().CreateTimer(CurrentWeapon.FireRate).Connect("timeout", new Callable(this, nameof(ResetCanShoot)));
         }
 
         if (Input.IsActionJustPressed("toggle_revolver"))
@@ -223,26 +179,26 @@ public partial class Player : CharacterBody3D
 
     private void ToggleWeapon(Weapon weaponToEquip)
     {
-        if (_currentWeapon == weaponToEquip)
+        if (CurrentWeapon == weaponToEquip)
         {
-            _currentWeapon.Visible = false;
-            _currentWeapon = null;
+            CurrentWeapon.Visible = false;
+            CurrentWeapon = null;
             EmitSignal(SignalName.CrosshairVisibilityChanged, false);
             UpdateAmmoLabel();
             return;
         }
 
-        if (_currentWeapon is not null)
+        if (CurrentWeapon is not null)
         {
-            _currentWeapon.Visible = false;
-            _currentWeapon = weaponToEquip;
-            _currentWeapon.Visible = true;
+            CurrentWeapon.Visible = false;
+            CurrentWeapon = weaponToEquip;
+            CurrentWeapon.Visible = true;
             UpdateAmmoLabel();
             return;
         }
 
-        _currentWeapon = weaponToEquip;
-        _currentWeapon.Visible = true;
+        CurrentWeapon = weaponToEquip;
+        CurrentWeapon.Visible = true;
         EmitSignal(SignalName.CrosshairVisibilityChanged, true);
 
         UpdateAmmoLabel();
@@ -264,10 +220,5 @@ public partial class Player : CharacterBody3D
     private void ResetCanShoot()
     {
         _canShoot = true;
-    }
-
-    private void UpdateCrosshair(float spread)
-    {
-        EmitSignal(SignalName.AimSpreadChanged, spread);
     }
 }

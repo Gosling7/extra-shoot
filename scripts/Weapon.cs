@@ -15,6 +15,15 @@ public partial class Weapon : Node3D
 
     public int AmmoCurrentlyInMag { get; private set; }
 
+    [Export] private float _recoilPerShot = 0.1f;
+    [Export] private float _maxAimSpread = 0.15f;
+    [Export] private float _recoilRecoverySpeed = 5f;
+    [Export] private float _movementAimSpreadIncreaseSpeed = 20f;
+    [Export] private float _movementAimSpreadDecreaseSpeed = 7f;
+    private float _currentAimSpread;
+    private float _movementAimSpread;
+    private float _recoilAimSpread;
+
     private Helper _helper;
     private uint _collisionMask;
     private Player _player;
@@ -25,6 +34,8 @@ public partial class Weapon : Node3D
     public delegate void WeaponShotEventHandler(int usedAmmoCount);
     [Signal]
     public delegate void WeaponReloadedEventHandler();
+    [Signal]
+    public delegate void AimSpreadChangedEventHandler(float spread);
 
     public override void _Ready()
     {
@@ -37,7 +48,18 @@ public partial class Weapon : Node3D
         AmmoCurrentlyInMag = MagSize;
     }
 
-    public void Shoot(float spread)
+    public override void _Process(double delta)
+    {
+        if (_player.CurrentWeapon != this)
+        {
+            return;
+        }
+
+        UpdateAimSpread(delta);
+        EmitSignal(SignalName.AimSpreadChanged, _currentAimSpread);
+    }
+
+    public void Shoot()
     {
         if (AmmoCurrentlyInMag <= 0)
         {
@@ -46,7 +68,7 @@ public partial class Weapon : Node3D
         }
 
         var hitResult = _helper.GetHitResultUnderMouseWithSpread(_collisionMask, [_player.GetRid()],
-            spread);
+            _currentAimSpread);
         if (!hitResult.TryGetValue("position", out var hitPosition))
         {
             return;
@@ -56,12 +78,16 @@ public partial class Weapon : Node3D
         AmmoCurrentlyInMag--;
         EmitSignal(SignalName.WeaponShot, 1);
 
+        _recoilAimSpread += _recoilPerShot;
+        GD.Print($"RecoilAimSpread: {_recoilAimSpread}");
+        GD.Print($"RecoilPerShot: {_recoilPerShot}");
+
         if (!hitResult.TryGetValue("collider", out var hitNode)
             || (Node3D)hitNode is not IDamageable damageable)
         {
             return;
         }
-
+        //_currentAimSpread = _maxAimSpread; // czy to potrzebne gdy jest recoilPerShot?
         var timer = GetTree().CreateTimer(DelayToApplyDamageInSec);
         timer.Timeout += () => damageable?.TakeDamage(Damage);
     }
@@ -86,6 +112,24 @@ public partial class Weapon : Node3D
     }
 
     public bool IsMagEmpty() => AmmoCurrentlyInMag <= 0;
+
+    private void UpdateAimSpread(double delta)
+    {
+        var moveRatio = Mathf.Clamp(_player.Velocity.Length() / _player.MovementSpeed, 0f, 1f);
+
+        var targetMovementSpread = moveRatio * _maxAimSpread;
+
+        var aimSpreadSpeed = targetMovementSpread > _movementAimSpread
+            ? _movementAimSpreadIncreaseSpeed
+            : _movementAimSpreadDecreaseSpeed;
+
+        _movementAimSpread = Mathf.Lerp(_movementAimSpread, targetMovementSpread, (float)(aimSpreadSpeed * delta));
+
+        _recoilAimSpread = Mathf.Lerp(_recoilAimSpread, 0f, (float)(_recoilRecoverySpeed * delta));
+
+
+        _currentAimSpread = _movementAimSpread + _recoilAimSpread;
+    }
 
     private void SpawnTracer(Vector3 targetPosition)
     {

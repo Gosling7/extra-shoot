@@ -9,6 +9,9 @@ size = Vector3(0.185, 0.275, 0.91)
 MagSize = 1
 ReloadTime = 2.5
 Damage = 30
+_recoilPerShot = 0.3
+_maxAimSpread = 0.3
+_movementAimSpreadDecreaseSpeed = 3.0
 
 [node name="Body" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="0" unique_id=46993262]
 transform = Transform3D(0.34842288, 0, 0, 0, 0.69553065, 0, 0, 0, 0.32290658, 0, 0.26245373, -0.2199541)

@@ -31,7 +31,8 @@ public partial class CrosshairUI : Control
 		_crosshairLeftDefaultPosition = _crosshairLeft.Position;
 		_crosshairRightDefaultPosition = _crosshairRight.Position;
 
-		_player.AimSpreadChanged += OnAimSpreadChanged;
+		_player._revolver.AimSpreadChanged += OnAimSpreadChanged;
+		_player._rifle.AimSpreadChanged += OnAimSpreadChanged;
 		_player.CrosshairVisibilityChanged += OnCrosshairVisibilityChanged;
 	}
 
