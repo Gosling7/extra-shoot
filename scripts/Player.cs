@@ -7,20 +7,30 @@ namespace ExtraShoot.scripts;
 
 public partial class Player : CharacterBody3D
 {
+    // Weapon should have these
+    private float _currentAimSpread;
+    private float _movementAimSpread;
+    private float _recoilAimSpread;
+    [Export] private float _recoilPerShot = 0.1f;
+    [Export] private float _maxAimSpread = 0.15f;
+    [Export] private float _recoilRecoverySpeed = 5f;
+    [Export] private float _movementAimSpreadIncreaseSpeed = 20f;
+    [Export] private float _movementAimSpreadDecreaseSpeed = 7f;
+
     [Export]
     private int BaseMovementSpeed { get; set; } = 9;
     [Export]
-    private int MovementSpeedWhileAiming { get; set; } = 3;
-    [Export]
-    public float OverallMaxAimSpread { get; set; } = 0.1f;
-    [Export]
-    public float MaxAimSpreadWhileAiming { get; set; } = 0.025f;
-    [Export]
-    public float SpreadLerpSpeed { get; set; } = 4f;
+    private int MovementSpeedWhileAiming { get; set; } = 4;
+    // [Export]
+    // public float OverallMaxAimSpread { get; set; } = 0.1f;
+    // [Export]
+    // public float MaxAimSpreadWhileAiming { get; set; } = 0.025f;
+    // [Export]
+    // public float SpreadLerpSpeed { get; set; } = 4f;
     [Export]
     public float FireRate { get; set; } = 1.5f;
 
-    private int _movementSpeed;
+    [Export] private int _movementSpeed;
 
     private Vector3 _targetVelocity = Vector3.Zero;
     private Vector3 _direction;
@@ -31,15 +41,6 @@ public partial class Player : CharacterBody3D
     private Helper _helper;
     private bool _canShoot = true;
     private Viewport _viewport;
-    private Node3D _holsteredRevolverVisual;
-    private Node3D _holsteredRifleVisual;
-
-    private float _minAimSpread = 0f;
-    private float _maxAimSpread;
-    private float _currentSpread;
-
-    private int _revolverAmmoCount;
-    private int _rifleAmmoCount;
 
     private Label3D _ammoLabel;
 
@@ -70,12 +71,10 @@ public partial class Player : CharacterBody3D
 
         _viewport = GetViewport();
         _camera = _viewport.GetCamera3D();
-        _holsteredRevolverVisual = GetNode<Weapon>("Pivot/HolsteredRevolver");
-        _holsteredRifleVisual = GetNode<Weapon>("Pivot/HolsteredRifle");
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
         _ammoLabel = GetNode<Label3D>("Label3D");
 
-        _maxAimSpread = OverallMaxAimSpread;
+        //_maxAimSpread = OverallMaxAimSpread;
         //MaxAimSpreadWhileAiming = OverallMaxAimSpread / 4;
 
         _movementSpeed = BaseMovementSpeed;
@@ -85,6 +84,28 @@ public partial class Player : CharacterBody3D
 
         _revolver.WeaponReloaded += OnWeaponReloaded;
         _rifle.WeaponReloaded += OnWeaponReloaded;
+    }
+
+    public override void _Process(double delta)
+    {
+        RotateTowardsCursor();
+
+        UpdateAimSpread(delta);
+
+        UpdateCrosshair(_currentAimSpread);
+
+        HandleInput();
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        // Ground velocity
+        _targetVelocity.X = _direction.X * _movementSpeed;
+        _targetVelocity.Z = _direction.Z * _movementSpeed;
+
+        // Moving the character
+        Velocity = _targetVelocity;
+        MoveAndSlide();
     }
 
     private void OnWeaponReloaded()
@@ -108,31 +129,30 @@ public partial class Player : CharacterBody3D
 
     private void OnWeaponShot(int usedAmmoCount)
     {
+        _recoilAimSpread += _recoilPerShot;
         UpdateAmmoLabel();
     }
 
-    public override void _Process(double delta)
+    private void UpdateAimSpread(double delta)
     {
-        RotateTowardsCursor();
+        var moveRatio = Mathf.Clamp(Velocity.Length() / _movementSpeed, 0f, 1f);
 
-        var spread = Velocity.Length() > 0.1f ? _maxAimSpread : _minAimSpread;
-        _currentSpread = Mathf.Lerp(_currentSpread, spread, (float)(SpreadLerpSpeed * delta));
-        if (_currentSpread < 0.001f)
-        {
-            _currentSpread = 0f;
-        }
+        var targetMovementSpread = moveRatio * _maxAimSpread;
 
-        // GD.Print($"Current spread: {_currentSpread}");
+        var aimSpreadSpeed = targetMovementSpread > _movementAimSpread
+            ? _movementAimSpreadIncreaseSpeed
+            : _movementAimSpreadDecreaseSpeed;
 
-        UpdateCrosshair(_currentSpread);
+        _movementAimSpread = Mathf.Lerp(_movementAimSpread, targetMovementSpread, (float)(aimSpreadSpeed * delta));
 
-        HandleInput();
+        _recoilAimSpread = Mathf.Lerp(_recoilAimSpread, 0f, (float)(_recoilRecoverySpeed * delta));
+
+        _currentAimSpread = _movementAimSpread + _recoilAimSpread;
     }
 
     private void HandleInput()
     {
         _direction = Vector3.Zero;
-
         if (Input.IsActionPressed("move_right"))
         {
             _direction.X += 1.0f;
@@ -149,15 +169,16 @@ public partial class Player : CharacterBody3D
         {
             _direction.Z -= 1.0f;
         }
+        _direction = _direction.Normalized();
 
         if (Input.IsActionPressed("aim"))
         {
-            _maxAimSpread = MaxAimSpreadWhileAiming;
+            // _maxAimSpread = MaxAimSpreadWhileAiming;
             _movementSpeed = MovementSpeedWhileAiming;
         }
         else
         {
-            _maxAimSpread = OverallMaxAimSpread;
+            // _maxAimSpread = OverallMaxAimSpread;
             _movementSpeed = BaseMovementSpeed;
         }
 
@@ -180,8 +201,8 @@ public partial class Player : CharacterBody3D
                 return;
             }
 
-            _currentWeapon.Shoot(_currentSpread);
-            _currentSpread = _maxAimSpread;
+            _currentWeapon.Shoot(_currentAimSpread);
+            _currentAimSpread = _maxAimSpread;
             _canShoot = false;
 
             EmitSignal(SignalName.UpdateAmmoUI);
@@ -225,17 +246,6 @@ public partial class Player : CharacterBody3D
         EmitSignal(SignalName.CrosshairVisibilityChanged, true);
 
         UpdateAmmoLabel();
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        // Ground velocity
-        _targetVelocity.X = _direction.X * _movementSpeed;
-        _targetVelocity.Z = _direction.Z * _movementSpeed;
-
-        // Moving the character
-        Velocity = _targetVelocity;
-        MoveAndSlide();
     }
 
     private void RotateTowardsCursor()

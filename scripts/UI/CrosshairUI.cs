@@ -60,7 +60,7 @@ public partial class CrosshairUI : Control
 
 		Position = mousePosition - Size / 2f;
 
-		var spreadMultiplier = 900f; // combined 100 * 9
+		var spreadMultiplier = 500f;
 		var crosshairSpread = spread * spreadMultiplier;
 
 		_crosshairUp.Position = _crosshairUpDefaultPosition + new Vector2(0, -crosshairSpread);

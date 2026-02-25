@@ -24,6 +24,7 @@ mesh = SubResource("CapsuleMesh_sh265")
 [node name="Revolver" parent="Pivot" unique_id=8203568 instance=ExtResource("3_ht1c8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55334455, 0.9562569, -0.32664204)
 visible = false
+MagSize = 99
 
 [node name="HolsteredRevolver" parent="Pivot" unique_id=1295996286 instance=ExtResource("3_ht1c8")]
 transform = Transform3D(1, 0, 0, 0, 0.47295064, 0.8810889, 0, -0.8810889, 0.47295064, 0.4568193, 0.771032, 0.41016114)
