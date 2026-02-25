@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://tkbw8avqfmu0"]
+
+[ext_resource type="Script" uid="uid://bc0uqpv1cqsvj" path="res://scripts/UI/CrosshairUI.cs" id="1_3ia5x"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_7mycd"]
+
+[node name="CrosshairUI" type="Control" unique_id=1806998730]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_3ia5x")
+
+[node name="up" type="TextureRect" parent="." unique_id=129384462]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -1.0
+offset_right = 1.0
+offset_bottom = 12.0
+grow_horizontal = 2
+texture = SubResource("CanvasTexture_7mycd")
+
+[node name="down" type="TextureRect" parent="." unique_id=557394130]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -12.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("CanvasTexture_7mycd")
+
+[node name="right" type="TextureRect" parent="." unique_id=422393000]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -1.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = SubResource("CanvasTexture_7mycd")
+
+[node name="left" type="TextureRect" parent="." unique_id=1048032022]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -1.0
+offset_right = 12.0
+offset_bottom = 1.0
+grow_vertical = 2
+texture = SubResource("CanvasTexture_7mycd")

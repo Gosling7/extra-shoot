@@ -34,17 +34,6 @@ public partial class Player : CharacterBody3D
     private Node3D _holsteredRevolverVisual;
     private Node3D _holsteredRifleVisual;
 
-    private Control _newCrosshair;
-    private TextureRect _crosshairUp;
-    private TextureRect _crosshairDown;
-    private TextureRect _crosshairLeft;
-    private TextureRect _crosshairRight;
-
-    private Vector2 _crosshairUpDefaultPosition;
-    private Vector2 _crosshairDownDefaultPosition;
-    private Vector2 _crosshairLeftDefaultPosition;
-    private Vector2 _crosshairRightDefaultPosition;
-
     private float _minAimSpread = 0f;
     private float _maxAimSpread;
     private float _currentSpread;
@@ -60,6 +49,10 @@ public partial class Player : CharacterBody3D
 
     [Signal]
     public delegate void UpdateAmmoUIEventHandler();
+    [Signal]
+    public delegate void AimSpreadChangedEventHandler(float spread);
+    [Signal]
+    public delegate void CrosshairVisibilityChangedEventHandler(bool isVisible);
 
     public override void _Ready()
     {
@@ -80,18 +73,7 @@ public partial class Player : CharacterBody3D
         _holsteredRevolverVisual = GetNode<Weapon>("Pivot/HolsteredRevolver");
         _holsteredRifleVisual = GetNode<Weapon>("Pivot/HolsteredRifle");
         _helper = GetTree().CurrentScene.GetNode<Helper>($"/root/{nameof(Helper)}");
-        _newCrosshair = GetTree().CurrentScene.GetNode<Control>("UI/NewCrosshair");
         _ammoLabel = GetNode<Label3D>("Label3D");
-
-        _crosshairUp = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/up");
-        _crosshairDown = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/down");
-        _crosshairLeft = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/left");
-        _crosshairRight = GetTree().CurrentScene.GetNode<TextureRect>("UI/NewCrosshair/right");
-
-        _crosshairUpDefaultPosition = _crosshairUp.Position;
-        _crosshairDownDefaultPosition = _crosshairDown.Position;
-        _crosshairLeftDefaultPosition = _crosshairLeft.Position;
-        _crosshairRightDefaultPosition = _crosshairRight.Position;
 
         _maxAimSpread = OverallMaxAimSpread;
         //MaxAimSpreadWhileAiming = OverallMaxAimSpread / 4;
@@ -224,8 +206,7 @@ public partial class Player : CharacterBody3D
         {
             _currentWeapon.Visible = false;
             _currentWeapon = null;
-            Input.MouseMode = Input.MouseModeEnum.Visible;
-            _newCrosshair.Visible = false;
+            EmitSignal(SignalName.CrosshairVisibilityChanged, false);
             UpdateAmmoLabel();
             return;
         }
@@ -241,9 +222,7 @@ public partial class Player : CharacterBody3D
 
         _currentWeapon = weaponToEquip;
         _currentWeapon.Visible = true;
-
-        Input.MouseMode = Input.MouseModeEnum.Hidden;
-        _newCrosshair.Visible = true;
+        EmitSignal(SignalName.CrosshairVisibilityChanged, true);
 
         UpdateAmmoLabel();
     }
@@ -279,38 +258,6 @@ public partial class Player : CharacterBody3D
 
     private void UpdateCrosshair(float spread)
     {
-        var mousePosition = _viewport.GetMousePosition();
-
-        _newCrosshair.Position = new Vector2(
-            mousePosition.X - _newCrosshair.Size.X / 2,
-            mousePosition.Y - _newCrosshair.Size.Y / 2);
-
-        var spreadMultiplier = 9f;
-        var crosshairSpread = spread * 100 * spreadMultiplier;
-        // GD.Print(crosshairSpread);
-
-        if (_currentSpread > 0.001f)
-        {
-            _crosshairUp.Position = new Vector2(
-                _crosshairUpDefaultPosition.X,
-                _crosshairUpDefaultPosition.Y - crosshairSpread);
-            _crosshairDown.Position = new Vector2(
-                _crosshairDownDefaultPosition.X,
-                _crosshairDownDefaultPosition.Y + crosshairSpread);
-
-            _crosshairLeft.Position = new Vector2(
-                _crosshairLeftDefaultPosition.X - crosshairSpread, _crosshairLeftDefaultPosition.Y);
-            _crosshairRight.Position = new Vector2(
-                _crosshairRightDefaultPosition.X + crosshairSpread, _crosshairRightDefaultPosition.Y);
-        }
-
-        if (_currentSpread < 0.001f)
-        {
-            _crosshairUp.Position = _crosshairUpDefaultPosition;
-            _crosshairDown.Position = _crosshairDownDefaultPosition;
-
-            _crosshairLeft.Position = _crosshairLeftDefaultPosition;
-            _crosshairRight.Position = _crosshairRightDefaultPosition;
-        }
+        EmitSignal(SignalName.AimSpreadChanged, spread);
     }
 }

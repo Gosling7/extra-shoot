@@ -3,11 +3,10 @@
 [ext_resource type="PackedScene" uid="uid://d0esfmj8s3avt" path="res://prefabs/player.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://76lgm7jj4ow" path="res://prefabs/ground.tscn" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://d23rseqydf2wa" path="res://prefabs/enemy.tscn" id="3_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://tkbw8avqfmu0" path="res://prefabs/UI/crosshair_ui.tscn" id="3_272bh"]
 [ext_resource type="Script" uid="uid://dwmhei1p8m3w4" path="res://scripts/Camera.cs" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://bj10myvc2qk24" path="res://prefabs/enemy_tank.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://mw08susmkab3" path="res://prefabs/container.tscn" id="6_272bh"]
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_7mycd"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_lquwl"]
 vertices = PackedVector3Array(-10.295776, 0.51678896, -11.050941, -8.295776, 0.51678896, -11.050941, -8.295776, 0.26678896, -45.05094, -45.545776, 0.51678896, -8.300941, -11.045776, 0.51678896, -8.300941, -11.045776, 0.51678896, -10.300941, -45.295776, 0.26678896, -45.05094, 0.45422363, 0.51678896, -11.050941, 0.70422363, 0.51678896, -10.050941, 14.454224, 0.51678896, -10.050941, 14.454224, 0.51678896, -27.800941, 15.454224, 0.51678896, -28.050941, 15.454224, 0.26678896, -45.05094, 16.704224, 0.51678896, -27.800941, 45.454224, 0.51678896, -26.550941, 45.204224, 0.26678896, -45.05094, 16.704224, 0.51678896, -26.300941, 16.704224, 0.51678896, 0.44905853, 45.454224, 0.51678896, 0.69905853, 13.454224, 0.51678896, 5.9490585, 13.704224, 0.51678896, 6.4490585, 14.954224, 0.51678896, 2.1990585, 14.454224, 0.51678896, 1.9490585, 0.45422363, 0.51678896, -8.800941, -1.0457764, 0.51678896, -8.800941, -0.79577637, 0.51678896, 5.9490585, -8.795776, 0.51678896, 0.44905853, -10.045776, 0.51678896, 0.69905853, -10.045776, 0.51678896, 5.9490585, -8.795776, 0.51678896, -8.800941, -11.045776, 0.51678896, 0.44905853, -16.295776, 0.51678896, 5.9490585, -45.545776, 0.51678896, 7.1990585, -16.545776, 0.51678896, 7.1990585, 16.454224, 0.51678896, 2.1990585, 13.454224, 0.51678896, 8.199059, 12.204224, 0.26678896, 44.94906, 45.204224, 0.26678896, 44.94906, 11.954224, 0.51678896, 8.199059, -16.295776, 0.51678896, 8.199059, -45.295776, 0.26678896, 44.94906, -15.045776, 0.26678896, 44.94906, -14.795776, 0.51678896, 8.199059)
@@ -29,62 +28,7 @@ script = ExtResource("5_lquwl")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=569314964]
 
-[node name="NewCrosshair" type="Control" parent="UI" unique_id=564317827]
-visible = false
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="up" type="TextureRect" parent="UI/NewCrosshair" unique_id=1777214084]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -1.0
-offset_right = 1.0
-offset_bottom = 12.0
-grow_horizontal = 2
-texture = SubResource("CanvasTexture_7mycd")
-
-[node name="down" type="TextureRect" parent="UI/NewCrosshair" unique_id=1540989079]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -1.0
-offset_top = -12.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = SubResource("CanvasTexture_7mycd")
-
-[node name="right" type="TextureRect" parent="UI/NewCrosshair" unique_id=896668604]
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -12.0
-offset_top = -1.0
-offset_bottom = 1.0
-grow_horizontal = 0
-grow_vertical = 2
-texture = SubResource("CanvasTexture_7mycd")
-
-[node name="left" type="TextureRect" parent="UI/NewCrosshair" unique_id=319226038]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -1.0
-offset_right = 12.0
-offset_bottom = 1.0
-grow_vertical = 2
-texture = SubResource("CanvasTexture_7mycd")
+[node name="CrosshairUI" parent="UI" unique_id=1806998730 instance=ExtResource("3_272bh")]
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=250684950]
 navigation_mesh = SubResource("NavigationMesh_lquwl")
