@@ -103,8 +103,6 @@ public partial class Player : CharacterBody3D
 
         _revolver.WeaponReloaded += OnWeaponReloaded;
         _rifle.WeaponReloaded += OnWeaponReloaded;
-
-        // UpdateAmmoLabel();
     }
 
     private void OnWeaponReloaded()
@@ -119,7 +117,7 @@ public partial class Player : CharacterBody3D
         {
             _ammoLabel.Visible = false;
         }
-        if (_currentWeapon is not null && !_ammoLabel.Visible)
+        if (_currentWeapon is not null)
         {
             _ammoLabel.Visible = true;
             _ammoLabel.Text = $"{_currentWeapon.AmmoCurrentlyInMag}/{_reserveAmmo[_currentWeapon]}";
@@ -128,9 +126,6 @@ public partial class Player : CharacterBody3D
 
     private void OnWeaponShot(int usedAmmoCount)
     {
-        // _reserveAmmo[_currentWeapon]--;
-        // GD.Print($"{_currentWeapon.Name} ammo: {_reserveAmmo[_currentWeapon]}");
-
         UpdateAmmoLabel();
     }
 
@@ -231,6 +226,15 @@ public partial class Player : CharacterBody3D
             _currentWeapon = null;
             Input.MouseMode = Input.MouseModeEnum.Visible;
             _newCrosshair.Visible = false;
+            UpdateAmmoLabel();
+            return;
+        }
+
+        if (_currentWeapon is not null)
+        {
+            _currentWeapon.Visible = false;
+            _currentWeapon = weaponToEquip;
+            _currentWeapon.Visible = true;
             UpdateAmmoLabel();
             return;
         }

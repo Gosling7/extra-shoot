@@ -8,8 +8,8 @@
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_sh265"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fp3wc"]
-radius = 0.41992188
-height = 1.8161621
+radius = 0.50097656
+height = 1.8397217
 
 [node name="Player" type="CharacterBody3D" unique_id=1164382560]
 collision_mask = 3
@@ -18,7 +18,7 @@ script = ExtResource("1_72ieh")
 [node name="Pivot" type="Node3D" parent="." unique_id=1962913918]
 
 [node name="Character" type="MeshInstance3D" parent="Pivot" unique_id=1029226086]
-transform = Transform3D(0.882, 0, 0, 0, 0.903, 0, 0, 0, 0.7358717, 0, 0.9058717, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9707928, 0, 0.9058717, 0)
 mesh = SubResource("CapsuleMesh_sh265")
 
 [node name="Revolver" parent="Pivot" unique_id=8203568 instance=ExtResource("3_ht1c8")]
@@ -38,7 +38,7 @@ transform = Transform3D(-1.617094e-08, 0.67862135, 0.7344883, -6.421101e-08, -0.
 visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1015283703]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9261646, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9379444, 0)
 shape = SubResource("CapsuleShape3D_fp3wc")
 
 [node name="AmmoUI" parent="." unique_id=2020970134 instance=ExtResource("5_ht1c8")]
