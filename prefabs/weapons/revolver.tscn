@@ -6,6 +6,7 @@
 size = Vector3(0.185, 0.275, 0.91)
 
 [node name="Weapon" unique_id=1295996286 instance=ExtResource("1_xhtso")]
+MovementSpeedPenaltyWhileAiming = 4
 _recoilPerShot = 0.2
 
 [node name="Body" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="0" unique_id=125840700]

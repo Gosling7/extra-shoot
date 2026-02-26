@@ -12,11 +12,14 @@ public partial class Weapon : Node3D
     [Export] public float ReloadTime = 1.5f;
     [Export] public int Damage = 10;
     [Export] public float DelayToApplyDamageInSec = 0.1f;
+    [Export] public int MovementSpeedPenaltyWhileAiming { get; private set; } = 5;
+    [Export] public float MaxAimSpreadWhileAiming { get; private set; } = 0.05f;
+    [Export] public float BaseMaxAimSpread { get; private set; } = 0.15f;
 
     public int AmmoCurrentlyInMag { get; private set; }
 
     [Export] private float _recoilPerShot = 0.1f;
-    [Export] private float _maxAimSpread = 0.15f;
+    private float _maxAimSpread;
     [Export] private float _recoilRecoverySpeed = 5f;
     [Export] private float _movementAimSpreadIncreaseSpeed = 20f;
     [Export] private float _movementAimSpreadDecreaseSpeed = 7f;
@@ -44,6 +47,8 @@ public partial class Weapon : Node3D
         _collisionMask = _player.CollisionMask;
         _muzzle = GetNode<Marker3D>("Muzzle");
         _tracer = GetNode<MeshInstance3D>("Muzzle/Tracer");
+
+        _maxAimSpread = BaseMaxAimSpread;
 
         AmmoCurrentlyInMag = MagSize;
     }
@@ -87,7 +92,7 @@ public partial class Weapon : Node3D
         {
             return;
         }
-        //_currentAimSpread = _maxAimSpread; // czy to potrzebne gdy jest recoilPerShot?
+
         var timer = GetTree().CreateTimer(DelayToApplyDamageInSec);
         timer.Timeout += () => damageable?.TakeDamage(Damage);
     }
@@ -115,6 +120,8 @@ public partial class Weapon : Node3D
 
     private void UpdateAimSpread(double delta)
     {
+        _maxAimSpread = _player.IsAiming ? MaxAimSpreadWhileAiming : BaseMaxAimSpread;
+
         var moveRatio = Mathf.Clamp(_player.Velocity.Length() / _player.MovementSpeed, 0f, 1f);
 
         var targetMovementSpread = moveRatio * _maxAimSpread;
