@@ -1,3 +1,4 @@
+using ExtraShoot.scripts.Interfaces;
 using Godot;
 using System;
 
@@ -10,18 +11,23 @@ public enum State
     AttackingRange
 }
 
-public partial class EnemyBase : CharacterBody3D
+public partial class EnemyBase : CharacterBody3D, IDamageable
 {
     [Export] protected float LookForTargetIntervalInSec = 0.5f;
     [Export] protected float AggroRangeInMetres = 20f;
+    [Export] protected float DetectionRangeInMetres = 15f;
     [Export] protected int MovementSpeed = 5;
     [Export] protected int Damage = 5;
+    [Export] protected int MaxHealth = 30;
 
     protected Area3D _detectionArea;
 
-    protected NavigationAgent3D _navigationAgent = null;
-    protected Player _player;
     protected State _currentState = State.Idle;
+    protected NavigationAgent3D _navigationAgent;
+    protected Player _player;
+
+    private int _currentHealth;
+    private ProgressBar _healthbar;
 
     public Vector3 MovementTarget
     {
@@ -39,6 +45,16 @@ public partial class EnemyBase : CharacterBody3D
 
         _detectionArea = GetNode<Area3D>("EnemyDetectionArea");
         _detectionArea.BodyEntered += OnPlayerDetected;
+        var detectionCollision = _detectionArea.GetNode<CollisionShape3D>("DetectionCollisionShape");
+        detectionCollision.Shape = new SphereShape3D
+        {
+            Radius = DetectionRangeInMetres
+        };
+
+        _currentHealth = MaxHealth;
+        _healthbar = GetNode<ProgressBar>("HealthBarRoot/SubViewport/HealthBarUI/ProgressBar");
+        _healthbar.MaxValue = MaxHealth;
+        _healthbar.Value = _currentHealth;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -98,11 +114,6 @@ public partial class EnemyBase : CharacterBody3D
         MoveAndSlide();
     }
 
-    protected void Move(Vector3 target)
-    {
-        MovementTarget = target;
-    }
-
     private void OnPlayerDetected(Node3D body)
     {
         if (body is Player player)
@@ -110,4 +121,23 @@ public partial class EnemyBase : CharacterBody3D
             EnterState(State.Moving);
         }
     }
+
+    public void TakeDamage(int amount)
+    {
+        _currentHealth -= amount;
+        _healthbar.Value = _currentHealth;
+
+        if (_currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        GD.Print("Daed");
+
+        QueueFree();
+    }
+
 }
