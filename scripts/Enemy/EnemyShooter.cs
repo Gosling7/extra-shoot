@@ -3,16 +3,6 @@ using Godot;
 
 namespace ExtraShoot.scripts.Enemy;
 
-public class RangedAttackState : IState
-{
-    public Vector3 Target { get; set; }
-
-    public RangedAttackState(Vector3 target)
-    {
-        Target = target;
-    }
-}
-
 public partial class EnemyShooter : EnemyBase
 {
     [Export] private float AttackRangeInMetres = 5f;
@@ -27,21 +17,21 @@ public partial class EnemyShooter : EnemyBase
         base._Ready();
     }
 
-    protected override void EnterState(IState newState)
+    protected override void EnterState(State newState)
     {
         switch (newState)
         {
-            case IdleState:
+            case State.Idle:
                 GD.Print("Entered Idle State");
-                Idle();
+                _currentState = newState;
                 return;
-            case MoveState:
+            case State.Moving:
                 GD.Print("Entered Move State");
-                Move(newState.Target);
+                _currentState = newState;
                 return;
-            case RangedAttackState:
+            case State.AttackingRange:
                 GD.Print("Entered RangedAttack State");
-                // AttackFromRange(newState.Target);
+                _currentState = newState;
                 return;
             default:
                 return;
@@ -50,63 +40,44 @@ public partial class EnemyShooter : EnemyBase
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_navigationAgent.IsNavigationFinished()
-            || GlobalPosition.DistanceTo(_player.GlobalPosition) > AggroRangeInMetres)
+        switch (_currentState)
         {
-            return;
+            case State.Idle:
+                return;
+            case State.Moving:
+                ProcessMoving();
+                return;
+            case State.AttackingRange:
+                ProcessAttackingRange();
+                return;
         }
+    }
 
+    protected override void ProcessMoving()
+    {
+        if (GlobalPosition.DistanceTo(_player.GlobalPosition) > AggroRangeInMetres)
+        {
+            EnterState(State.Idle);
+        }
         if (GlobalPosition.DistanceTo(_player.GlobalPosition) < AttackRangeInMetres)
         {
-            // GD.Print("In range to shoot");
-            if (!_isShooting)
-            {
-                EnterState(new RangedAttackState(_player.GlobalPosition));
-            }
-
-            AttackFromRange(_player.GlobalPosition);
-
-            return;
+            EnterState(State.AttackingRange);
         }
 
-        _isShooting = false;
         MoveCharacter();
     }
 
-    // protected override void ProcessMove()
-    // {
-    //     if (GlobalPosition.DistanceTo(_player.GlobalPosition) < AttackRangeInMetres)
-    //     {
-    //         GD.Print("In range to shoot");
-    //         EnterState(new RangedAttackState(_player.GlobalPosition));
-    //         return;
-    //     }
-
-    //     _isShooting = false;
-    //     MoveCharacter();
-    // }
-
-    // private void ProcessShooting()
-    // {
-    //     if (!_isShooting)
-    //     {
-    //         return;
-    //     }
-
-    //     if (_canShoot)
-    //     {
-    //         Shoot();
-    //     }
-    // }
-
-    private void AttackFromRange(Vector3 target)
+    private void ProcessAttackingRange()
     {
-        _isShooting = true;
+        if (GlobalPosition.DistanceTo(_player.GlobalPosition) > AttackRangeInMetres)
+        {
+            EnterState(State.Moving);
+        }
 
         var aimDirection = new Vector3(
-            target.X,
+            _player.GlobalPosition.X,
             GlobalPosition.Y,
-            target.Z);
+            _player.GlobalPosition.Z);
 
         LookAt(aimDirection, Vector3.Up);
 

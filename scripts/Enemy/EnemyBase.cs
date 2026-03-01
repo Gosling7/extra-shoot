@@ -1,34 +1,14 @@
 using Godot;
 using System;
-using System.Reflection.Emit;
 
 namespace ExtraShoot.scripts.Enemy;
 
-public interface IState
+public enum State
 {
-    public Vector3 Target { get; set; }
+    Idle,
+    Moving,
+    AttackingRange
 }
-
-class MoveState : IState
-{
-    public Vector3 Target { get; set; }
-
-    public MoveState(Vector3 target)
-    {
-        Target = target;
-    }
-}
-
-class IdleState : IState
-{
-    public Vector3 Target { get; set; }
-
-    public IdleState()
-    {
-    }
-}
-
-
 
 public partial class EnemyBase : CharacterBody3D
 {
@@ -41,6 +21,7 @@ public partial class EnemyBase : CharacterBody3D
 
     protected NavigationAgent3D _navigationAgent = null;
     protected Player _player;
+    protected State _currentState = State.Idle;
 
     public Vector3 MovementTarget
     {
@@ -58,48 +39,51 @@ public partial class EnemyBase : CharacterBody3D
 
         _detectionArea = GetNode<Area3D>("EnemyDetectionArea");
         _detectionArea.BodyEntered += OnPlayerDetected;
-        _detectionArea.BodyExited += OnPlayerLost;
-
-        EnterState(new IdleState());
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_navigationAgent.IsNavigationFinished()
-            || GlobalPosition.DistanceTo(_player.GlobalPosition) > AggroRangeInMetres)
+        switch (_currentState)
         {
-            return;
-        }
-
-        MoveCharacter();
-    }
-
-    protected virtual void EnterState(IState newState)
-    {
-        switch (newState)
-        {
-            case IdleState:
-                GD.Print("Entered Idle State");
-                Idle();
+            case State.Idle:
                 return;
-            case MoveState:
-                GD.Print("Entered Move State");
-                Move(newState.Target);
+            case State.Moving:
+                ProcessMoving();
                 return;
             default:
                 return;
         }
     }
 
-    protected virtual void ProcessMove()
+    protected virtual void ProcessMoving()
     {
-        if (_navigationAgent.IsNavigationFinished()
-            || GlobalPosition.DistanceTo(_player.GlobalPosition) > AggroRangeInMetres)
+        // without checking this, enemy can go around the corner and move too far from player
+        // on its own and stop moving
+        // _navigationAgent.IsNavigationFinished(); 
+        if (GlobalPosition.DistanceTo(_player.GlobalPosition) > AggroRangeInMetres)
         {
-            return;
+            EnterState(State.Idle);
         }
 
         MoveCharacter();
+    }
+
+
+    protected virtual void EnterState(State newState)
+    {
+        switch (newState)
+        {
+            case State.Idle:
+                GD.Print("Entered Idle State");
+                _currentState = newState;
+                return;
+            case State.Moving:
+                GD.Print("Entered Move State");
+                _currentState = newState;
+                return;
+            default:
+                return;
+        }
     }
 
     protected void MoveCharacter()
@@ -114,45 +98,8 @@ public partial class EnemyBase : CharacterBody3D
         MoveAndSlide();
     }
 
-
-    protected bool CanWalkToPlayer()
-    {
-        // if (_navigationAgent.IsNavigationFinished())
-        // {
-        //     return false;
-        // }
-
-        // if (_player is null)
-        // {
-        //     return false;
-        // }
-
-        // if (GlobalPosition.DistanceTo(_player.GlobalPosition) > AggroRangeInMetres)
-        // {
-        //     return false;
-        // }
-
-        // return true;
-        return !_navigationAgent.IsNavigationFinished()
-            || _player is not null
-            || GlobalPosition.DistanceTo(_player.GlobalPosition) < AggroRangeInMetres;
-
-
-        // if (_isShooting)
-        // {
-        //     return false;
-        // }
-
-    }
-
-    protected void Idle()
-    {
-
-    }
-
     protected void Move(Vector3 target)
     {
-        // _isShooting = false;
         MovementTarget = target;
     }
 
@@ -160,21 +107,7 @@ public partial class EnemyBase : CharacterBody3D
     {
         if (body is Player player)
         {
-            GD.Print("Player Found!");
-            var moveState = new MoveState(player.GlobalPosition);
-
-            EnterState(moveState);
-        }
-    }
-
-    private void OnPlayerLost(Node3D body)
-    {
-        if (body is Player)
-        {
-            GD.Print("Player Lost!");
-            MovementTarget = Vector3.Zero;
-
-            EnterState(new IdleState());
+            EnterState(State.Moving);
         }
     }
 }

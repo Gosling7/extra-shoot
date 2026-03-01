@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b86xyb0dkgwjo" path="res://prefabs/UI/health_bar_ui.tscn" id="3_4tpvj"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_yfjof"]
-radius = 10.0
+radius = 15.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ks3ws"]
 

@@ -74,8 +74,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.805202, 3.8146973e-06, -4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.35413, 1.9073486e-06, -37.639328)
 
 [node name="Enemy" parent="Enemies" unique_id=1937972577 instance=ExtResource("8_5vw27")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.765474, 3.8146973e-06, 0.46373558)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.844389, 3.8146973e-06, 0.46373558)
 script = ExtResource("9_kek77")
-AttackRangeInMetres = 5.0
+AttackRangeInMetres = 10.0
 ShootCooldown = 1.5
 ProjectileScene = ExtResource("10_4c57u")
+MovementSpeed = 4
