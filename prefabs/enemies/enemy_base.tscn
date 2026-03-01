@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://bhrthfdh4pmho"]
+
+[ext_resource type="Script" uid="uid://crxl1c3rsq0bw" path="res://scripts/Enemy/EnemyBase.cs" id="1_vb48r"]
+[ext_resource type="PackedScene" uid="uid://b86xyb0dkgwjo" path="res://prefabs/UI/health_bar_ui.tscn" id="3_4tpvj"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yfjof"]
+radius = 15.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6n8dw"]
+radius = 0.4580078
+height = 1.5869141
+
+[node name="EnemyBase" type="CharacterBody3D" unique_id=1937972577]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_vb48r")
+
+[node name="EnemyDetectionArea" type="Area3D" parent="." unique_id=442186486]
+collision_layer = 0
+input_ray_pickable = false
+
+[node name="DetectionCollisionShape" type="CollisionShape3D" parent="EnemyDetectionArea" unique_id=1681896857]
+shape = SubResource("SphereShape3D_yfjof")
+debug_color = Color(0, 0.5950001, 0.7, 1)
+
+[node name="Pivot" type="Node3D" parent="." unique_id=909536654]
+transform = Transform3D(0.724, 0, 0, 0, 0.83, 0, 0, 0, 0.72, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=13438480]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83955836, 0)
+shape = SubResource("CapsuleShape3D_6n8dw")
+
+[node name="HealthBarRoot" parent="." unique_id=1766194223 instance=ExtResource("3_4tpvj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1450663, 0)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=794284444]

@@ -2,14 +2,11 @@
 
 [ext_resource type="PackedScene" uid="uid://d0esfmj8s3avt" path="res://prefabs/player.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://76lgm7jj4ow" path="res://prefabs/ground.tscn" id="2_h2yge"]
-[ext_resource type="PackedScene" uid="uid://d23rseqydf2wa" path="res://prefabs/enemy.tscn" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://tkbw8avqfmu0" path="res://prefabs/UI/crosshair_ui.tscn" id="3_272bh"]
 [ext_resource type="Script" uid="uid://dwmhei1p8m3w4" path="res://scripts/Camera.cs" id="5_lquwl"]
-[ext_resource type="PackedScene" uid="uid://bj10myvc2qk24" path="res://prefabs/enemy_tank.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://cgldbwda7djor" path="res://prefabs/enemies/enemy_walker.tscn" id="6_5vw27"]
 [ext_resource type="PackedScene" uid="uid://mw08susmkab3" path="res://prefabs/container.tscn" id="6_272bh"]
-[ext_resource type="PackedScene" uid="uid://bhrthfdh4pmho" path="res://prefabs/enemyBase.tscn" id="8_5vw27"]
-[ext_resource type="Script" uid="uid://cw7wdymrdwlri" path="res://scripts/Enemy/EnemyShooter.cs" id="9_kek77"]
-[ext_resource type="PackedScene" uid="uid://6rji4jqktugi" path="res://prefabs/projectile.tscn" id="10_4c57u"]
+[ext_resource type="PackedScene" uid="uid://c6pmvhul4f83s" path="res://prefabs/enemies/enemy_shooter.tscn" id="7_kek77"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_lquwl"]
 vertices = PackedVector3Array(-10.295776, 0.51678896, -11.050941, -8.295776, 0.51678896, -11.050941, -8.295776, 0.26678896, -45.05094, -45.545776, 0.51678896, -8.300941, -11.045776, 0.51678896, -8.300941, -11.045776, 0.51678896, -10.300941, -45.295776, 0.26678896, -45.05094, 0.45422363, 0.51678896, -11.050941, 0.70422363, 0.51678896, -10.050941, 14.454224, 0.51678896, -10.050941, 14.454224, 0.51678896, -27.800941, 15.454224, 0.51678896, -28.050941, 15.454224, 0.26678896, -45.05094, 16.704224, 0.51678896, -27.800941, 45.454224, 0.51678896, -26.550941, 45.204224, 0.26678896, -45.05094, 16.704224, 0.51678896, -26.300941, 16.704224, 0.51678896, 0.44905853, 45.454224, 0.51678896, 0.69905853, 13.454224, 0.51678896, 5.9490585, 13.704224, 0.51678896, 6.4490585, 14.954224, 0.51678896, 2.1990585, 14.454224, 0.51678896, 1.9490585, 0.45422363, 0.51678896, -8.800941, -1.0457764, 0.51678896, -8.800941, -0.79577637, 0.51678896, 5.9490585, -8.795776, 0.51678896, 0.44905853, -10.045776, 0.51678896, 0.69905853, -10.045776, 0.51678896, 5.9490585, -8.795776, 0.51678896, -8.800941, -11.045776, 0.51678896, 0.44905853, -16.295776, 0.51678896, 5.9490585, -45.545776, 0.51678896, 7.1990585, -16.545776, 0.51678896, 7.1990585, 16.454224, 0.51678896, 2.1990585, 13.454224, 0.51678896, 8.199059, 12.204224, 0.26678896, 44.94906, 45.204224, 0.26678896, 44.94906, 11.954224, 0.51678896, 8.199059, -16.295776, 0.51678896, 8.199059, -45.295776, 0.26678896, 44.94906, -15.045776, 0.26678896, 44.94906, -14.795776, 0.51678896, 8.199059)
@@ -67,16 +64,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.588052, 0.3682475, -0.8108
 
 [node name="Enemies" type="Node" parent="." unique_id=1621196184]
 
-[node name="EnemyOld2" parent="Enemies" unique_id=1430408034 instance=ExtResource("3_1bvp3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.805202, 3.8146973e-06, -41.318428)
+[node name="EnemyWalker" parent="Enemies" unique_id=1937972577 instance=ExtResource("6_5vw27")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.149012, 0, 2.2139273)
 
-[node name="EnemyOld3" parent="Enemies" unique_id=1521964430 instance=ExtResource("6_7mycd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.35413, 1.9073486e-06, -37.639328)
-
-[node name="Enemy" parent="Enemies" unique_id=1937972577 instance=ExtResource("8_5vw27")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.844389, 3.8146973e-06, 0.46373558)
-script = ExtResource("9_kek77")
-AttackRangeInMetres = 10.0
-ShootCooldown = 1.5
-ProjectileScene = ExtResource("10_4c57u")
-MovementSpeed = 4
+[node name="EnemyShooter" parent="Enemies" unique_id=135521743 instance=ExtResource("7_kek77")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.643958, 0, -18.022087)

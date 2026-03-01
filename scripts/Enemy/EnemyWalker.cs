@@ -9,4 +9,9 @@ public partial class EnemyWalker : EnemyBase
     {
         base._Ready();
     }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+    }
 }

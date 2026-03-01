@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://cgldbwda7djor"]
+
+[ext_resource type="PackedScene" uid="uid://bhrthfdh4pmho" path="res://prefabs/enemies/enemy_base.tscn" id="1_cqhod"]
+[ext_resource type="Script" uid="uid://dtgkkn0rh8vn6" path="res://scripts/Enemy/EnemyWalker.cs" id="2_dgswb"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_cqhod"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dgswb"]
+albedo_color = Color(0.74313927, 0.42709714, 0.5049034, 1)
+
+[node name="EnemyWalker" unique_id=1937972577 instance=ExtResource("1_cqhod")]
+script = ExtResource("2_dgswb")
+AggroRangeInMetres = 25.0
+MovementSpeed = 4
+
+[node name="Legs" type="MeshInstance3D" parent="Pivot" parent_id_path=PackedInt32Array(909536654) index="0" unique_id=546553695]
+transform = Transform3D(0.5833414, 0, 0, 0, 0.5278766, 0, 0, 0, 0.4644112, 0, 0.53431135, 0)
+mesh = SubResource("CapsuleMesh_cqhod")
+surface_material_override/0 = SubResource("StandardMaterial3D_dgswb")
+
+[node name="Head" type="MeshInstance3D" parent="Pivot" parent_id_path=PackedInt32Array(909536654) index="1" unique_id=1424228010]
+transform = Transform3D(0.37775984, 0, 0, 0, 0.19180258, 0, 0, 0, 0.45025653, 0, 1.745462, 0)
+mesh = SubResource("CapsuleMesh_cqhod")
+surface_material_override/0 = SubResource("StandardMaterial3D_dgswb")
+
+[node name="RightArm" type="MeshInstance3D" parent="Pivot" parent_id_path=PackedInt32Array(909536654) index="2" unique_id=578911093]
+transform = Transform3D(0.27767685, 0, 0, 0, 0.5278766, 0, 0, 0, 0.34601036, 0.50012577, 0.9513393, 0)
+mesh = SubResource("CapsuleMesh_cqhod")
+surface_material_override/0 = SubResource("StandardMaterial3D_dgswb")
+
+[node name="LeftArm" type="MeshInstance3D" parent="Pivot" parent_id_path=PackedInt32Array(909536654) index="3" unique_id=1102001997]
+transform = Transform3D(0.27767685, 0, 0, 0, 0.5278766, 0, 0, 0, 0.34601036, -0.5, 0.951136, 0)
+mesh = SubResource("CapsuleMesh_cqhod")
+surface_material_override/0 = SubResource("StandardMaterial3D_dgswb")
+
+[node name="Torso" type="MeshInstance3D" parent="Pivot" parent_id_path=PackedInt32Array(909536654) index="4" unique_id=1268717068]
+transform = Transform3D(0.9388482, 0, 0, 0, 0.48340338, 0, 0, 0, 0.69076526, 0, 1.1258684, 0)
+mesh = SubResource("CapsuleMesh_cqhod")
+surface_material_override/0 = SubResource("StandardMaterial3D_dgswb")
