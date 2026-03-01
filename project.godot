@@ -38,7 +38,8 @@ version_control/autoload_on_startup=true
 
 folder_colors={
 "res://prefabs/": "blue",
-"res://scripts/": "green"
+"res://scripts/": "green",
+"res://space_station/": "gray"
 }
 
 [input]

@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://xt63plltxue0"]
+
+[ext_resource type="PackedScene" uid="uid://cpg704i4k0hiu" path="res://space_station/wall-corner-banner.fbx" id="1_xhvfc"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_33wtb"]
+points = PackedVector3Array(-0.39999998, 0.017649245, -0.39603174, -0.099999994, 0.9772734, 0.05396828, -0.39999998, 0.98235077, 0.056349233, -0.39999998, 0.98235077, -0.39603174, -0.39999998, 0.017649245, 0.056349233, -0.099999994, 0.022726621, -0.3936508, -0.099999994, 0.9772734, -0.3936508, -0.099999994, 0.022726621, 0.05396828)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_bx4cv"]
+points = PackedVector3Array(-0.38866204, 0, 0.31801474, 0.38815635, 0.31986642, 0.35, 0.39063966, 0.32088897, 0.14999999, 0.40158734, -0.007936537, 0.084144115, -0.35, 0.32058415, 0.07306668, 0.3823129, 0, 0.39365083, -0.3443854, 0.21426396, 0.40158737, -0.38866204, 0, 0.07619053, -0.32956475, 0.3181576, 0.33357966, -0.14999999, 0.34028044, 0.05337038, 0.40158734, 0.21426396, 0.40158737, -0.32225418, 0.0028735916, 0.39077723, -0.40793648, 0.21426396, 0.32216945, 0.40158734, 0.21426396, 0.084144115, -0.40793648, 0.21426396, 0.068253994, -0.090418674, -0.007936537, 0.068253994, -0.37349308, -2.7755576e-17, 0.36338395, -0.39200908, 0.21426396, 0.36980712, -0.30303243, 0.31233203, 0.34461913, -0.3445644, 0.31804752, 0.3031639, -0.37616092, 0.21426396, 0.38569725, -0.35507742, 0.0014844985, 0.3771744)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3ds51"]
+points = PackedVector3Array(0.39217338, 1, 0.39771104, 0.40158734, 0.7697791, 0.40158737, 0.40158734, 0.78561175, 0.084144115, -0.14999999, 0.29499066, 0.05337038, -0.39852253, 1, 0.07213033, 0.38815635, 0.33678672, 0.35, -0.32956475, 0.3402854, 0.33357966, -0.35116702, 0.98507017, 0.390419, 0.40158734, 1.0079365, 0.084144115, 0.39063966, 0.33469313, 0.14999999, -0.35, 0.33531722, 0.07306668, -0.3443854, 0.7697791, 0.40158737, -0.1003952, 0.79920954, 0.049195338, -0.39129576, 0.99390745, 0.3490561, -0.090418674, 1.0079365, 0.068253994, -0.30303243, 0.3522128, 0.34461913, -0.3445644, 0.3405108, 0.3031639, -0.37763622, 0.7767101, 0.34503922, -0.37676582, 0.99455917, 0.37978643, -0.3815267, 0.7630534, 0.07912861)
+
+[node name="wall-corner-banner" unique_id=2108912422 instance=ExtResource("1_xhvfc")]
+
+[node name="wall-corner-banner" parent="." index="0" unique_id=1813685223]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="wall-corner-banner" index="0" unique_id=431263107]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall-corner-banner/StaticBody3D" index="0" unique_id=1609001562]
+shape = SubResource("ConvexPolygonShape3D_33wtb")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="wall-corner-banner/StaticBody3D" index="1" unique_id=1679817255]
+shape = SubResource("ConvexPolygonShape3D_bx4cv")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="wall-corner-banner/StaticBody3D" index="2" unique_id=478899907]
+shape = SubResource("ConvexPolygonShape3D_3ds51")

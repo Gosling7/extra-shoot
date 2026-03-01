@@ -23,7 +23,7 @@ script = ExtResource("1_dkuqq")
 transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.275427, -0.82664067)
 
 [node name="Tracer" type="MeshInstance3D" parent="Muzzle" unique_id=1993530619]
-transform = Transform3D(-2.2187538, 3.417771e-10, -0.013417749, 0.01734886, 4.3710045e-08, -1.7160026, 3.61838e-17, -0.99999964, -7.501115e-08, 0, 0, -0.015042961)
+transform = Transform3D(-6.549342, 3.4177716e-10, -0.0397567, 0.051210567, 4.371005e-08, -5.084504, 1.06807764e-16, -0.99999994, -2.2225757e-07, 0, 0, -0.015042961)
 visible = false
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_dkuqq")

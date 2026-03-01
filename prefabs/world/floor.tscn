@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://4a0mvtfeef4s"]
+
+[ext_resource type="PackedScene" uid="uid://cjpl081x0hwsf" path="res://space_station/floor.fbx" id="1_fowmb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fowmb"]
+albedo_color = Color(0.54901963, 0.57254905, 0.6745098, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fowmb"]
+size = Vector3(1, 0.3, 1)
+
+[node name="floor" unique_id=1543788335 instance=ExtResource("1_fowmb")]
+
+[node name="floor" parent="." index="0" unique_id=940901521]
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0)
+surface_material_override/0 = SubResource("StandardMaterial3D_fowmb")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="floor" index="0" unique_id=1756980132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor/StaticBody3D" index="0" unique_id=155685018]
+shape = SubResource("BoxShape3D_fowmb")

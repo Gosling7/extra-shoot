@@ -24,3 +24,6 @@ mesh = SubResource("BoxMesh_xhtso")
 [node name="Handle" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="3" unique_id=466365987]
 transform = Transform3D(0.3484229, 0, 0, 0, 0.14397056, -0.35782987, 0, 0.58398646, 0.08821603, 0, 0.062336713, -0.043255284)
 mesh = SubResource("BoxMesh_xhtso")
+
+[node name="Muzzle" parent="." index="1" unique_id=1415312969]
+transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.275427, -0.81230134)

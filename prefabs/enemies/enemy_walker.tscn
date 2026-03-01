@@ -10,7 +10,7 @@ albedo_color = Color(0.74313927, 0.42709714, 0.5049034, 1)
 
 [node name="EnemyWalker" unique_id=1937972577 instance=ExtResource("1_cqhod")]
 script = ExtResource("2_dgswb")
-AggroRangeInMetres = 25.0
+DetectionRangeInMetres = 10.0
 
 [node name="Legs" type="MeshInstance3D" parent="Pivot" parent_id_path=PackedInt32Array(909536654) index="0" unique_id=546553695]
 transform = Transform3D(0.5833414, 0, 0, 0, 0.5278766, 0, 0, 0, 0.4644112, 0, 0.53431135, 0)

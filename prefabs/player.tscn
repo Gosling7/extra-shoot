@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://tmb751uphkhq" path="res://prefabs/UI/ammo_ui.tscn" id="5_ht1c8"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_sh265"]
+height = 1.7
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fp3wc"]
 radius = 0.50097656
@@ -18,7 +19,7 @@ script = ExtResource("1_72ieh")
 [node name="Pivot" type="Node3D" parent="." unique_id=1962913918]
 
 [node name="Character" type="MeshInstance3D" parent="Pivot" unique_id=1029226086]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9707928, 0, 0.9058717, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9707928, 0, 0.83233255, 0)
 mesh = SubResource("CapsuleMesh_sh265")
 
 [node name="Revolver" parent="Pivot" unique_id=8203568 instance=ExtResource("3_ht1c8")]

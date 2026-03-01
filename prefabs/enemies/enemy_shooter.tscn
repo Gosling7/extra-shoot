@@ -14,7 +14,7 @@ script = ExtResource("2_q0oxj")
 AttackRangeInMetres = 12.0
 ShootCooldown = 1.5
 ProjectileScene = ExtResource("3_4rpxv")
-AggroRangeInMetres = 25.0
+DetectionRangeInMetres = 10.0
 MovementSpeed = 4
 
 [node name="Legs" type="MeshInstance3D" parent="Pivot" parent_id_path=PackedInt32Array(909536654) index="0" unique_id=613570972]
