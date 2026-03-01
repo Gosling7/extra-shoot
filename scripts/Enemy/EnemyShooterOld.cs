@@ -5,7 +5,7 @@ using System;
 
 namespace ExtraShoot.scripts.Enemy;
 
-public partial class EnemyTank : CharacterBody3D, IDamageable
+public partial class EnemyShooterOld : CharacterBody3D, IDamageable
 {
     [Export]
     public int MaxHealth { get; set; } = 30;
@@ -77,33 +77,33 @@ public partial class EnemyTank : CharacterBody3D, IDamageable
             return;
         }
 
-        // // if in range to shoot -> shoot
-        // if (GlobalPosition.DistanceTo(_currentAggroTarget.GlobalPosition) < AttackRangeInMeters)
-        // {
-        //     GD.Print("In range to Shoot");
-        //     _isInRangeToShoot = true;
-        //     Velocity = Vector3.Zero;
-        //     MoveAndSlide();
+        // if in range to shoot -> shoot
+        if (GlobalPosition.DistanceTo(_currentAggroTarget.GlobalPosition) < AttackRangeInMeters)
+        {
+            GD.Print("In range to Shoot");
+            _isInRangeToShoot = true;
+            Velocity = Vector3.Zero;
+            MoveAndSlide();
 
-        //     var aimDirection = new Vector3(
-        //         _currentAggroTarget.GlobalPosition.X,
-        //         GlobalPosition.Y,
-        //         _currentAggroTarget.GlobalPosition.Z);
-                
-        //     LookAt(aimDirection, Vector3.Up);
-        //     // spawn projectile
-        //     if (_canShoot)
-        //     {
-        //         ShootAtTarget(_currentAggroTarget.GlobalPosition);
-        //         _isInRangeToShoot = true;
-        //     }
+            var aimDirection = new Vector3(
+                _currentAggroTarget.GlobalPosition.X,
+                GlobalPosition.Y,
+                _currentAggroTarget.GlobalPosition.Z);
 
-        //     return;
-        // }
-        // else
-        // {
-        //     _isInRangeToShoot = false;
-        // }
+            LookAt(aimDirection, Vector3.Up);
+            // spawn projectile
+            if (_canShoot)
+            {
+                ShootAtTarget(_currentAggroTarget.GlobalPosition);
+                _isInRangeToShoot = true;
+            }
+
+            return;
+        }
+        else
+        {
+            _isInRangeToShoot = false;
+        }
 
         if (_currentMoveTarget is not null)
         {

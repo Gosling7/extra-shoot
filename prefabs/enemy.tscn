@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d23rseqydf2wa"]
 
-[ext_resource type="Script" uid="uid://bjqg62jk286um" path="res://scripts/Enemy/EnemyShooter.cs" id="1_6n8dw"]
+[ext_resource type="Script" uid="uid://bjqg62jk286um" path="res://scripts/Enemy/EnemyShooterOld.cs" id="1_6n8dw"]
 [ext_resource type="PackedScene" uid="uid://6rji4jqktugi" path="res://prefabs/projectile.tscn" id="2_cypye"]
 [ext_resource type="PackedScene" uid="uid://b86xyb0dkgwjo" path="res://prefabs/UI/health_bar_ui.tscn" id="2_yfjof"]
 
