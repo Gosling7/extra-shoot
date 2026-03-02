@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bhrthfdh4pmho" path="res://prefabs/enemies/enemy_base.tscn" id="1_dp0vr"]
 [ext_resource type="Script" uid="uid://cw7wdymrdwlri" path="res://scripts/Enemy/EnemyShooter.cs" id="2_q0oxj"]
-[ext_resource type="PackedScene" uid="uid://6rji4jqktugi" path="res://prefabs/projectile.tscn" id="3_4rpxv"]
+[ext_resource type="PackedScene" uid="uid://bm81140fqf730" path="res://prefabs/projectiles/projectile_enemy.tscn" id="3_4rpxv"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_q0oxj"]
 

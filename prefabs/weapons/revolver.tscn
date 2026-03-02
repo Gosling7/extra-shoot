@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://785bv2gbyieq"]
 
 [ext_resource type="PackedScene" uid="uid://cniqowobxfe01" path="res://prefabs/weapons/weapon.tscn" id="1_xhtso"]
+[ext_resource type="PackedScene" uid="uid://dc7xv7pbt4uxb" path="res://prefabs/projectiles/projectile_player.tscn" id="2_bys6h"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_xhtso"]
 size = Vector3(0.185, 0.275, 0.91)
 
 [node name="Weapon" unique_id=1295996286 instance=ExtResource("1_xhtso")]
 MovementSpeedPenaltyWhileAiming = 4
+ProjectileScene = ExtResource("2_bys6h")
 _recoilPerShot = 0.2
 
 [node name="Body" type="MeshInstance3D" parent="Model" parent_id_path=PackedInt32Array(1892915233) index="0" unique_id=125840700]
@@ -26,4 +28,8 @@ transform = Transform3D(0.3484229, 0, 0, 0, 0.14397056, -0.35782987, 0, 0.583986
 mesh = SubResource("BoxMesh_xhtso")
 
 [node name="Muzzle" parent="." index="1" unique_id=1415312969]
-transform = Transform3D(0.3266166, 0, 0, 0, 0.3266166, 0, 0, 0, 1, 0, 0.275427, -0.81230134)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275427, -0.81230134)
+
+[node name="Tracer" parent="Muzzle" index="0" unique_id=1993530619]
+transform = Transform3D(-0.9999694, 8.7592525e-08, -0.007820125, 0.007820125, 4.3473054e-08, -0.9999694, -8.7249646e-08, -1, -4.4156707e-08, 0, 0, -0.015042961)
+visible = true

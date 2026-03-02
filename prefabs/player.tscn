@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://d0esfmj8s3avt"]
 
 [ext_resource type="Script" uid="uid://bxm74j8mqcill" path="res://scripts/Player.cs" id="1_72ieh"]
+[ext_resource type="PackedScene" uid="uid://dc7xv7pbt4uxb" path="res://prefabs/projectiles/projectile_player.tscn" id="2_ht1c8"]
 [ext_resource type="PackedScene" uid="uid://785bv2gbyieq" path="res://prefabs/weapons/revolver.tscn" id="3_ht1c8"]
 [ext_resource type="PackedScene" uid="uid://b2i8au60es0wu" path="res://prefabs/weapons/rifle.tscn" id="4_ht1c8"]
 [ext_resource type="PackedScene" uid="uid://tmb751uphkhq" path="res://prefabs/UI/ammo_ui.tscn" id="5_ht1c8"]
@@ -15,6 +16,7 @@ height = 1.8397217
 [node name="Player" type="CharacterBody3D" unique_id=1164382560]
 collision_mask = 3
 script = ExtResource("1_72ieh")
+ProjectileScene = ExtResource("2_ht1c8")
 
 [node name="Pivot" type="Node3D" parent="." unique_id=1962913918]
 

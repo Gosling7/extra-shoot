@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dc7xv7pbt4uxb"]
+
+[ext_resource type="PackedScene" uid="uid://bud8cltpk2ua3" path="res://prefabs/projectiles/projectile_base.tscn" id="1_3lfo5"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_s5n0i"]
+radius = 0.1
+height = 0.723
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k6rf6"]
+albedo_color = Color(0.8, 0.5466667, 0, 1)
+
+[node name="ProjectilePlayer" unique_id=371568442 instance=ExtResource("1_3lfo5")]
+collision_mask = 2
+Speed = 80.0
+
+[node name="CollisionShape3D" parent="." index="0" unique_id=2130114319]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.600764e-11, 0.00036621094)
+
+[node name="MeshInstance3D" parent="." index="1" unique_id=1573305976]
+mesh = SubResource("CapsuleMesh_s5n0i")
+surface_material_override/0 = SubResource("StandardMaterial3D_k6rf6")

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bm81140fqf730"]
+
+[ext_resource type="PackedScene" uid="uid://bud8cltpk2ua3" path="res://prefabs/projectiles/projectile_base.tscn" id="1_g41md"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_s5n0i"]
+radius = 0.238
+height = 1.844
+
+[node name="ProjectileEnemy" unique_id=371568442 instance=ExtResource("1_g41md")]
+
+[node name="MeshInstance3D" parent="." index="1" unique_id=1573305976]
+mesh = SubResource("CapsuleMesh_s5n0i")

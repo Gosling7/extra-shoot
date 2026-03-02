@@ -2,13 +2,14 @@ using ExtraShoot.scripts.Interfaces;
 using Godot;
 using System;
 
+namespace ExtraShoot.scripts;
+
 public partial class Projectile : Area3D
 {
-	[Export]
-	public float Speed = 35f;
-	
+	[Export] public float Speed = 35f;
+
 	private Vector3 _direction;
-	private int _damage = 5;
+	private int _damage = 10;
 
 	public void Initialize(int damage)
 	{
@@ -35,6 +36,6 @@ public partial class Projectile : Area3D
 			damageable.TakeDamage(_damage);
 		}
 
-		// QueueFree();
+		QueueFree();
 	}
 }

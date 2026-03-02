@@ -7,12 +7,10 @@ namespace ExtraShoot.scripts;
 
 public partial class Player : CharacterBody3D
 {
-    [Export]
-    private int BaseMovementSpeed { get; set; } = 9;
-    [Export]
-    public float FireRate { get; set; } = 1.5f;
-
+    [Export] private int BaseMovementSpeed { get; set; } = 9;
+    [Export] public float FireRate { get; set; } = 1.5f;
     [Export] public int MovementSpeed { get; private set; }
+
     public bool IsAiming { get; private set; }
 
     private int _movementSpeedWhileAiming;

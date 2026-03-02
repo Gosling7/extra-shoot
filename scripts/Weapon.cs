@@ -15,6 +15,7 @@ public partial class Weapon : Node3D
     [Export] public int MovementSpeedPenaltyWhileAiming { get; private set; } = 5;
     [Export] public float MaxAimSpreadWhileAiming { get; private set; } = 0.05f;
     [Export] public float BaseMaxAimSpread { get; private set; } = 0.15f;
+    [Export] private PackedScene ProjectileScene;
 
     public int AmmoCurrentlyInMag { get; private set; }
 
@@ -79,22 +80,24 @@ public partial class Weapon : Node3D
             return;
         }
 
-        SpawnTracer((Vector3)hitPosition);
+        _muzzle.LookAt((Vector3)hitPosition);
+        var projectile = ProjectileScene.Instantiate<Projectile>();
+        projectile.Initialize(Damage);
+        projectile.GlobalTransform = _muzzle.GlobalTransform;
+        GetTree().CurrentScene.AddChild(projectile);
+
         AmmoCurrentlyInMag--;
         EmitSignal(SignalName.WeaponShot, 1);
 
         _recoilAimSpread += _recoilPerShot;
-        GD.Print($"RecoilAimSpread: {_recoilAimSpread}");
-        GD.Print($"RecoilPerShot: {_recoilPerShot}");
+        // GD.Print($"RecoilAimSpread: {_recoilAimSpread}");
+        // GD.Print($"RecoilPerShot: {_recoilPerShot}");
 
         if (!hitResult.TryGetValue("collider", out var hitNode)
             || (Node3D)hitNode is not IDamageable damageable)
         {
             return;
         }
-
-        var timer = GetTree().CreateTimer(DelayToApplyDamageInSec);
-        timer.Timeout += () => damageable?.TakeDamage(Damage);
     }
 
     public void Reload(int ammoCount)
@@ -138,43 +141,43 @@ public partial class Weapon : Node3D
         _currentAimSpread = _movementAimSpread + _recoilAimSpread;
     }
 
-    private void SpawnTracer(Vector3 targetPosition)
-    {
-        _muzzle.LookAt(targetPosition);
-        var start = _muzzle.GlobalTransform.Origin;
-        var distance = start.DistanceTo(targetPosition);
+    // private void SpawnTracer(Vector3 targetPosition)
+    // {
+    //     _muzzle.LookAt(targetPosition);
+    //     var start = _muzzle.GlobalTransform.Origin;
+    //     var distance = start.DistanceTo(targetPosition);
 
-        if (_tracer.Mesh is CylinderMesh cylinder)
-        {
-            cylinder.Height = distance;
-        }
-        _tracer.Position = new Vector3(
-            _tracer.Position.X,
-            _tracer.Position.Y,
-            _tracer.Position.Z - distance / 2);
+    //     if (_tracer.Mesh is CylinderMesh cylinder)
+    //     {
+    //         cylinder.Height = distance;
+    //     }
+    //     _tracer.Position = new Vector3(
+    //         _tracer.Position.X,
+    //         _tracer.Position.Y,
+    //         _tracer.Position.Z - distance / 2);
 
-        // Spawn identical tracer with the same position and rotation but visible
-        // if that duplicate is spawned once and just has the position and visibility updated
-        // it might not be that stupid
-        var duplicateTracer = _tracer.Duplicate();
+    //     // Spawn identical tracer with the same position and rotation but visible
+    //     // if that duplicate is spawned once and just has the position and visibility updated
+    //     // it might not be that stupid
+    //     var duplicateTracer = _tracer.Duplicate();
 
-        GetTree().CurrentScene.AddChild(duplicateTracer);
+    //     GetTree().CurrentScene.AddChild(duplicateTracer);
 
-        var duplicate3D = duplicateTracer as Node3D;
-        duplicate3D.GlobalPosition = _tracer.GlobalPosition;
-        duplicate3D.GlobalRotation = _tracer.GlobalRotation;
-        duplicate3D.Visible = true;
+    //     var duplicate3D = duplicateTracer as Node3D;
+    //     duplicate3D.GlobalPosition = _tracer.GlobalPosition;
+    //     duplicate3D.GlobalRotation = _tracer.GlobalRotation;
+    //     duplicate3D.Visible = true;
 
-        var timer = GetTree().CreateTimer(0.15f);
-        timer.Timeout += () => ResetTracer(distance, duplicateTracer);
-    }
+    //     var timer = GetTree().CreateTimer(0.15f);
+    //     timer.Timeout += () => ResetTracer(distance, duplicateTracer);
+    // }
 
-    private void ResetTracer(float distance, Node duplicateTracer)
-    {
-        duplicateTracer.QueueFree();
-        _tracer.Position = new Vector3(
-            _tracer.Position.X,
-            _tracer.Position.Y,
-            _tracer.Position.Z + distance / 2);
-    }
+    // private void ResetTracer(float distance, Node duplicateTracer)
+    // {
+    //     duplicateTracer.QueueFree();
+    //     _tracer.Position = new Vector3(
+    //         _tracer.Position.X,
+    //         _tracer.Position.Y,
+    //         _tracer.Position.Z + distance / 2);
+    // }
 }
