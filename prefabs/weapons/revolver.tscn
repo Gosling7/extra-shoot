@@ -32,4 +32,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275427, -0.81230134)
 
 [node name="Tracer" parent="Muzzle" index="0" unique_id=1993530619]
 transform = Transform3D(-0.9999694, 8.7592525e-08, -0.007820125, 0.007820125, 4.3473054e-08, -0.9999694, -8.7249646e-08, -1, -4.4156707e-08, 0, 0, -0.015042961)
-visible = true

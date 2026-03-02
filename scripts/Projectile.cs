@@ -34,8 +34,9 @@ public partial class Projectile : Area3D
 		if (otherBody is IDamageable damageable)
 		{
 			damageable.TakeDamage(_damage);
+			QueueFree();
 		}
 
-		QueueFree();
+		// QueueFree();
 	}
 }

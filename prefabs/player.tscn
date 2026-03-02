@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://d0esfmj8s3avt"]
 
 [ext_resource type="Script" uid="uid://bxm74j8mqcill" path="res://scripts/Player.cs" id="1_72ieh"]
-[ext_resource type="PackedScene" uid="uid://dc7xv7pbt4uxb" path="res://prefabs/projectiles/projectile_player.tscn" id="2_ht1c8"]
 [ext_resource type="PackedScene" uid="uid://785bv2gbyieq" path="res://prefabs/weapons/revolver.tscn" id="3_ht1c8"]
 [ext_resource type="PackedScene" uid="uid://b2i8au60es0wu" path="res://prefabs/weapons/rifle.tscn" id="4_ht1c8"]
 [ext_resource type="PackedScene" uid="uid://tmb751uphkhq" path="res://prefabs/UI/ammo_ui.tscn" id="5_ht1c8"]
@@ -16,7 +15,6 @@ height = 1.8397217
 [node name="Player" type="CharacterBody3D" unique_id=1164382560]
 collision_mask = 3
 script = ExtResource("1_72ieh")
-ProjectileScene = ExtResource("2_ht1c8")
 
 [node name="Pivot" type="Node3D" parent="." unique_id=1962913918]
 
@@ -27,7 +25,6 @@ mesh = SubResource("CapsuleMesh_sh265")
 [node name="Revolver" parent="Pivot" unique_id=8203568 instance=ExtResource("3_ht1c8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55334455, 0.9562569, -0.32664204)
 visible = false
-MagSize = 99
 
 [node name="HolsteredRevolver" parent="Pivot" unique_id=1295996286 instance=ExtResource("3_ht1c8")]
 transform = Transform3D(1, 0, 0, 0, 0.47295064, 0.8810889, 0, -0.8810889, 0.47295064, 0.4568193, 0.771032, 0.41016114)
@@ -36,7 +33,6 @@ visible = false
 [node name="Rifle" parent="Pivot" unique_id=839543719 instance=ExtResource("4_ht1c8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.54783666, 0.90188766, -0.3374731)
 visible = false
-MagSize = 99
 
 [node name="HolsteredRifle" parent="Pivot" unique_id=31177587 instance=ExtResource("4_ht1c8")]
 transform = Transform3D(-1.617094e-08, 0.67862135, 0.7344883, -6.421101e-08, -0.7344883, 0.67862135, 1, -3.618829e-08, 5.5452325e-08, 0.24040791, 1.4754088, 0.43459523)

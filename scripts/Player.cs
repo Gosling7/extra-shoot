@@ -9,8 +9,10 @@ public partial class Player : CharacterBody3D
 {
     [Export] private int BaseMovementSpeed { get; set; } = 9;
     [Export] public float FireRate { get; set; } = 1.5f;
-    [Export] public int MovementSpeed { get; private set; }
+    [Export] private int RevolverReserveAmmo = 9;
+    [Export] private int RifleReserveAmmo = 2;
 
+    public int MovementSpeed { get; private set; }
     public bool IsAiming { get; private set; }
 
     private int _movementSpeedWhileAiming;
@@ -40,8 +42,8 @@ public partial class Player : CharacterBody3D
         _revolver = GetNode<Weapon>("Pivot/Revolver");
         _rifle = GetNode<Weapon>("Pivot/Rifle");
         _weapons.AddRange([_revolver, _rifle]);
-        _reserveAmmo[_revolver] = 9;
-        _reserveAmmo[_rifle] = 2;
+        _reserveAmmo[_revolver] = RevolverReserveAmmo;
+        _reserveAmmo[_rifle] = RifleReserveAmmo;
         CurrentWeapon = null;
 
         foreach (var weapon in _weapons)
@@ -148,7 +150,7 @@ public partial class Player : CharacterBody3D
             {
                 return;
             }
-            if (!_canShoot || _reserveAmmo[CurrentWeapon] <= 0)
+            if (!_canShoot || CurrentWeapon.AmmoCurrentlyInMag <= 0)
             {
                 return;
             }
