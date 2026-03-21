@@ -73,7 +73,7 @@ public partial class Weapon : Node3D
             return;
         }
 
-        var hitResult = _helper.GetHitResultUnderMouseWithSpread(_collisionMask, [_player.GetRid()],
+        var hitResult = _helper.GetHitResultUnderMouseWithSpread(4, [_player.GetRid()],
             _currentAimSpread);
         if (!hitResult.TryGetValue("position", out var hitPosition))
         {

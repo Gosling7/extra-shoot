@@ -37,6 +37,14 @@ public partial class Projectile : Area3D
 			QueueFree();
 		}
 
-		// QueueFree();
+
+
+		if (otherBody is StaticBody3D staticBody)
+		{
+			if (staticBody.CollisionLayer == 4)
+			{
+				QueueFree();
+			}
+		}
 	}
 }

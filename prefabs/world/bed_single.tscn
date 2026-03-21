@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://g41jihnudehx"]
+
+[ext_resource type="PackedScene" uid="uid://cb1fdkd23yti7" path="res://space_station/bed-single.fbx" id="1_mshwx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mshwx"]
+size = Vector3(0.5, 0.35000002, 1)
+
+[node name="bed-single" unique_id=1310740623 instance=ExtResource("1_mshwx")]
+
+[node name="bed-single" parent="." index="0" unique_id=519192761]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="bed-single" index="0" unique_id=1685435166]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17500001, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="bed-single/StaticBody3D" index="0" unique_id=98033584]
+shape = SubResource("BoxShape3D_mshwx")

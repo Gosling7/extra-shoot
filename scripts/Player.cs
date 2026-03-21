@@ -205,7 +205,7 @@ public partial class Player : CharacterBody3D
 
     private void RotateTowardsCursor()
     {
-        var hitResult = _helper.GetHitResultUnderMouse(CollisionMask, [GetRid()]);
+        var hitResult = _helper.GetHitResultUnderMouse(4, [GetRid()]);
         if (hitResult is null || !hitResult.TryGetValue("position", out var pos))
         {
             return;

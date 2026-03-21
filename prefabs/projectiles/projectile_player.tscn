@@ -10,7 +10,7 @@ height = 0.723
 albedo_color = Color(0.8, 0.5466667, 0, 1)
 
 [node name="ProjectilePlayer" unique_id=371568442 instance=ExtResource("1_3lfo5")]
-collision_mask = 2
+collision_mask = 6
 Speed = 80.0
 
 [node name="CollisionShape3D" parent="." index="0" unique_id=2130114319]

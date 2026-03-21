@@ -15,8 +15,11 @@ points = PackedVector3Array(0.39217338, 1, 0.39771104, 0.40158734, 0.7697791, 0.
 
 [node name="wall-corner-banner" parent="." index="0" unique_id=1813685223]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+cast_shadow = 0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="wall-corner-banner" index="0" unique_id=431263107]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="wall-corner-banner/StaticBody3D" index="0" unique_id=1609001562]
 shape = SubResource("ConvexPolygonShape3D_33wtb")

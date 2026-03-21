@@ -9,8 +9,11 @@ data = PackedVector3Array(0.39999998, 0.45, 0.099999994, 0.5, 0.7, 0.099999994, 
 
 [node name="wall-door-wide-banner" parent="." index="0" unique_id=926412659]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+cast_shadow = 0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="wall-door-wide-banner" index="0" unique_id=679342143]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="wall-door-wide-banner/StaticBody3D" index="0" unique_id=842110044]
 shape = SubResource("ConcavePolygonShape3D_gcjsn")

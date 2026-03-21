@@ -96,7 +96,7 @@ toggle_rifle={
 3d_navigation/layer_1="Ground"
 3d_physics/layer_2="Enemy"
 3d_navigation/layer_2="Obstacle"
-3d_physics/layer_3="PlayerProjectile"
+3d_physics/layer_3="World"
 
 [physics]
 
